@@ -1,0 +1,141 @@
+[gd_scene load_steps=4 format=3 uid="uid://cponqcw7k51d0"]
+
+[sub_resource type="GDScript" id="GDScript_5h67k"]
+script/source = "extends CharacterBody3D
+
+const WALK_SPEED = 5.0
+const SPRINT_SPEED = 8.5
+var SPEED = WALK_SPEED
+const JUMP_VELOCITY = 2.0
+
+const CAM_SENS = 0.03
+@onready var camera = $head/Camera3D
+
+@onready var BASE_FOV = camera.fov
+var FOV_CHANGE = 1.0
+
+const BOB_FREQ = 2.4
+const BOB_AMP = 0.08
+var t_bob = 0.0
+
+var inertia = Vector3.ZERO
+
+var PUSH_FORCE = 3.0
+
+var MAX_HEALTH = 50
+var HEALTH = MAX_HEALTH
+var damage_lock = 0.0
+
+@onready var model = $MeshInstance3D
+
+@export var data = {
+	\"max_health\": 50,
+	\"health\": 50,
+	\"max_hunger\": 100
+}
+
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	model.visible = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and \\
+	Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		self.rotate_y(-event.relative.x * (CAM_SENS / 10.0))
+		camera.rotate_x(-event.relative.y * (CAM_SENS / 10.0))
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+
+func headbob(time):
+	var pos = Vector3.ZERO
+	pos.x = cos(time * BOB_FREQ/2) * BOB_AMP
+	pos.y = sin(time * BOB_FREQ) * BOB_AMP
+	return pos
+
+func take_damage(dmg):
+	if damage_lock == 0.0:
+		damage_lock = 0.5
+		HEALTH -= dmg
+		if HEALTH <= 0:
+			await get_tree().create_timer(0.25).timeout
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			OS.alert(\"You died!\")
+			get_tree().reload_current_scene()
+	pass
+
+func _physics_process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+	if Input.is_action_just_pressed(\"reset_test\"):
+		get_tree().call_deferred(\"reload_current_scene\")
+	
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		
+	var input_dir := Input.get_vector(\"left\", \"right\", \"up\", \"down\")
+	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	elif not direction:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+		if is_on_floor():
+			pass
+	
+	t_bob += delta * velocity.length() * float(is_on_floor())
+	camera.transform.origin = headbob(t_bob)
+	
+	var velocity_clamped = clamp(velocity.length(), 0.5, SPEED*2.0)
+	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
+	camera.fov = lerp(camera.fov, target_fov, delta * 8.0)
+	
+	velocity += inertia
+	inertia = inertia.move_toward(Vector3.ZERO, delta*1000.0)
+	
+	for enemy in get_tree().get_nodes_in_group(\"Enemy\"):
+		if $feet.overlaps_area(enemy.dmg_area):
+			enemy.take_damage(0)
+	
+	damage_lock = max(damage_lock-delta, 0.0)
+	# HUD.healthbar.max_value = MAX_HEALTH
+	# HUD.healthbar.value = int(HEALTH)
+	
+	move_and_slide()
+"
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_juic7"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_py7ks"]
+radius = 0.517652
+height = 2.17593
+
+[node name="debase_player" type="CharacterBody3D" groups=["Player"]]
+wall_min_slide_angle = 3.14159
+script = SubResource("GDScript_5h67k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.261884, 0)
+mesh = SubResource("CapsuleMesh_juic7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00091821, 0.183595, 0)
+shape = SubResource("CapsuleShape3D_py7ks")
+
+[node name="head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0340518, 0.764707, 0)
+
+[node name="Camera3D" type="Camera3D" parent="head"]
+current = true
+fov = 90.0
+
+[node name="Left" type="Node3D" parent="head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.522243, -0.295132, -0.616556)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="head/Left"]
+size = Vector3(0.188477, 0.140625, 0.169922)

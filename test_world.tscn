@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3 uid="uid://7oh13t47s2nr"]
+
+[ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_gy3sr"]
+[ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_1lwx6"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
+sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_curve = 4.03631
+sky_energy_multiplier = 0.75
+sky_cover = ExtResource("1_gy3sr")
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+ground_curve = 0.0585633
+sun_curve = 3.76601
+
+[sub_resource type="Sky" id="Sky_gpdfc"]
+sky_material = SubResource("ProceduralSkyMaterial_5de8i")
+radiance_size = 6
+
+[sub_resource type="Environment" id="Environment_662na"]
+background_mode = 2
+sky = SubResource("Sky_gpdfc")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="test_world" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.939693, 0.34202, 1.49502e-08, 0, -4.37114e-08, 1, 0.34202, 0.939693, 4.10753e-08, 0, 0, 0)
+light_color = Color(0.314316, 0.314316, 0.314316, 1)
+light_energy = 10.596
+light_indirect_energy = 0.0
+light_angular_distance = 7.28
+light_negative = true
+shadow_enabled = true
+shadow_bias = 1.0
+shadow_normal_bias = 0.35
+shadow_transmittance_bias = 16.0
+directional_shadow_pancake_size = 1024.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_662na")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00811934, 0)
+use_collision = true
+size = Vector3(67.3447, 0.350708, 71.8037)
+
+[node name="debase_player" parent="." instance=ExtResource("2_1lwx6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.39587, 1.18302, -3.41255)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2405, 1.02342, 0.374385)
+use_collision = true
