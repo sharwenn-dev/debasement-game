@@ -33,7 +33,7 @@ var starve_timer = 0.0
 	\"max_health\": 50,
 	\"health\": 50,
 	\"max_hunger\": 100,
-	\"hunger\": 100,
+	\"hunger\": 50,
 	\"left\": null,
 	\"right\": null,
 	\"value_progs\": {
