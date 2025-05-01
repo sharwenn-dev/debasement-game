@@ -1,42 +1,57 @@
-[gd_scene load_steps=4 format=3 uid="uid://cponqcw7k51d0"]
+[gd_scene load_steps=6 format=3 uid="uid://cponqcw7k51d0"]
 
 [sub_resource type="GDScript" id="GDScript_5h67k"]
 script/source = "extends CharacterBody3D
 
-const WALK_SPEED = 5.0
-const SPRINT_SPEED = 8.5
-var SPEED = WALK_SPEED
+var SPEED = 4.0
 const JUMP_VELOCITY = 2.0
 
 const CAM_SENS = 0.03
 @onready var camera = $head/Camera3D
 
 @onready var BASE_FOV = camera.fov
-var FOV_CHANGE = 1.0
+var FOV_CHANGE = 0.5
 
 const BOB_FREQ = 2.4
 const BOB_AMP = 0.08
 var t_bob = 0.0
 
 var inertia = Vector3.ZERO
-
-var PUSH_FORCE = 3.0
-
-var MAX_HEALTH = 50
-var HEALTH = MAX_HEALTH
 var damage_lock = 0.0
 
 @onready var model = $MeshInstance3D
+@onready var health_bar = $head/Camera3D/HUD/health_bar
+@onready var hunger_bar = $head/Camera3D/HUD/hunger_bar
+
+var hunger_down_time = 5.0
+var time_since_hunger = 0.0
+var hunger_down_amount = 3
+var starve_time = 5.0
+var starve_timer = 0.0
 
 @export var data = {
 	\"max_health\": 50,
 	\"health\": 50,
-	\"max_hunger\": 100
+	\"max_hunger\": 100,
+	\"hunger\": 100,
+	\"left\": null,
+	\"right\": null,
+	\"value_progs\": {
+		\"kills\": 0,
+		\"starve_time\": 0
+	},
 }
+
+func player_setup():
+	hunger_bar.max_value = data.max_hunger
+	hunger_bar.value = data.hunger
+	health_bar.max_value = data.max_health
+	health_bar.value = data.health
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	model.visible = false
+	player_setup()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and \\
@@ -54,8 +69,8 @@ func headbob(time):
 func take_damage(dmg):
 	if damage_lock == 0.0:
 		damage_lock = 0.5
-		HEALTH -= dmg
-		if HEALTH <= 0:
+		data.health -= dmg
+		if data.health <= 0:
 			await get_tree().create_timer(0.25).timeout
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			OS.alert(\"You died!\")
@@ -63,6 +78,24 @@ func take_damage(dmg):
 	pass
 
 func _physics_process(delta: float) -> void:
+	if data.health <= 0:
+		#kill
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		OS.alert(\"dead\")
+		get_tree().call_deferred(\"reload_current_scene\")
+	
+	time_since_hunger += delta
+	if time_since_hunger >= hunger_down_time:
+		data.hunger -= hunger_down_amount
+		time_since_hunger = 0.0
+	
+	if data.hunger <= 0:
+		starve_timer += delta
+		if starve_timer >= starve_time:
+			data.health -= 10
+			starve_timer = 0.0
+	
 	if Input.is_action_just_pressed(\"ui_cancel\"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -98,13 +131,8 @@ func _physics_process(delta: float) -> void:
 	velocity += inertia
 	inertia = inertia.move_toward(Vector3.ZERO, delta*1000.0)
 	
-	for enemy in get_tree().get_nodes_in_group(\"Enemy\"):
-		if $feet.overlaps_area(enemy.dmg_area):
-			enemy.take_damage(0)
-	
 	damage_lock = max(damage_lock-delta, 0.0)
-	# HUD.healthbar.max_value = MAX_HEALTH
-	# HUD.healthbar.value = int(HEALTH)
+	player_setup()
 	
 	move_and_slide()
 "
@@ -114,6 +142,12 @@ func _physics_process(delta: float) -> void:
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_py7ks"]
 radius = 0.517652
 height = 2.17593
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ur2xb"]
+bg_color = Color(0, 0, 0, 1)
+corner_detail = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jvax"]
 
 [node name="debase_player" type="CharacterBody3D" groups=["Player"]]
 wall_min_slide_angle = 3.14159
@@ -134,8 +168,42 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0340518, 0.764707, 0)
 current = true
 fov = 90.0
 
+[node name="HUD" type="CanvasLayer" parent="head/Camera3D"]
+
+[node name="hunger_bar" type="ProgressBar" parent="head/Camera3D/HUD"]
+self_modulate = Color(0.969497, 0.548401, 0, 1)
+clip_children = 2
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 23.0
+offset_top = -135.0
+offset_right = 44.0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_ur2xb")
+theme_override_styles/fill = SubResource("StyleBoxFlat_6jvax")
+value = 50.0
+fill_mode = 3
+show_percentage = false
+
+[node name="health_bar" type="ProgressBar" parent="head/Camera3D/HUD"]
+self_modulate = Color(0.968627, 0.152941, 0, 1)
+clip_children = 2
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -135.0
+offset_right = 21.0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_ur2xb")
+theme_override_styles/fill = SubResource("StyleBoxFlat_6jvax")
+value = 50.0
+fill_mode = 3
+show_percentage = false
+
 [node name="Left" type="Node3D" parent="head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.522243, -0.295132, -0.616556)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="head/Left"]
+visible = false
 size = Vector3(0.188477, 0.140625, 0.169922)

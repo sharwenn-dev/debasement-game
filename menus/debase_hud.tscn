@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://vrvmhfhplpfo"]
+
+[node name="debase_hud" type="CanvasLayer"]
