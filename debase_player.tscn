@@ -22,12 +22,15 @@ var damage_lock = 0.0
 @onready var model = $MeshInstance3D
 @onready var health_bar = $head/Camera3D/HUD/health_bar
 @onready var hunger_bar = $head/Camera3D/HUD/hunger_bar
+@onready var interact_ray = $head/Camera3D/interact_ray
 
 var hunger_down_time = 5.0
 var time_since_hunger = 0.0
 var hunger_down_amount = 3
 var starve_time = 5.0
 var starve_timer = 0.0
+
+var can_interact = false
 
 @export var data = {
 	\"max_health\": 50,
@@ -78,6 +81,18 @@ func take_damage(dmg):
 	pass
 
 func _physics_process(delta: float) -> void:
+	for interactable in get_tree().get_nodes_in_group(\"Interactable\"):
+		if interact_ray.is_colliding() and interact_ray.get_collider() == interactable:
+			can_interact = true
+			if Input.is_action_just_pressed(\"interact\") and can_interact:
+				interactable.interact()
+		else:
+			can_interact = false
+	if can_interact:
+		$head/Camera3D/HUD/interact_test.visible = true
+	else:
+		$head/Camera3D/HUD/interact_test.visible = false
+	
 	if data.health <= 0:
 		#kill
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
@@ -201,9 +216,20 @@ value = 50.0
 fill_mode = 3
 show_percentage = false
 
-[node name="Left" type="Node3D" parent="head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.522243, -0.295132, -0.616556)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="head/Left"]
+[node name="interact_test" type="Label" parent="head/Camera3D/HUD"]
 visible = false
-size = Vector3(0.188477, 0.140625, 0.169922)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.5
+offset_top = -11.5
+offset_right = 30.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "interact"
+
+[node name="interact_ray" type="RayCast3D" parent="head/Camera3D"]
+target_position = Vector3(0, 0, -2)

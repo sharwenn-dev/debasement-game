@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://7oh13t47s2nr"]
+[gd_scene load_steps=7 format=3 uid="uid://7oh13t47s2nr"]
 
 [ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_gy3sr"]
 [ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_1lwx6"]
+[ext_resource type="PackedScene" uid="uid://d2245jh7nwd32" path="res://interact_test.tscn" id="3_1lwx6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
 sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
@@ -48,11 +49,7 @@ use_collision = true
 size = Vector3(67.3447, 0.350708, 71.8037)
 
 [node name="debase_player" parent="." instance=ExtResource("2_1lwx6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.39587, 1.18302, -3.41255)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2405, 1.02342, 0.374385)
-use_collision = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37611, 5.80487, -4.52524)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2213, 3.35481, 12.5526)
@@ -68,3 +65,9 @@ size = Vector3(11.5186, 6.46063, 12.9678)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6876, 3.35481, -10.6308)
 use_collision = true
 size = Vector3(11.5186, 6.46063, 12.9678)
+
+[node name="interact_test" parent="." groups=["Interactable"] instance=ExtResource("3_1lwx6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.244238, 0.628891, 5.19593)
+
+[node name="interact_test2" parent="." groups=["Interactable"] instance=ExtResource("3_1lwx6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.70096, 0.628891, 5.19593)
