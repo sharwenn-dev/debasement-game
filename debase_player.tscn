@@ -6,7 +6,7 @@
 script/source = "extends CharacterBody3D
 
 var SPEED = 4.0
-const JUMP_VELOCITY = 2.0
+const JUMP_VELOCITY = 5.0
 
 const CAM_SENS = 0.03
 @onready var camera = $head/Camera3D
@@ -96,21 +96,18 @@ func take_damage(dmg):
 	pass
 
 func get_item(item, side):
-	#var item_path = \"res://items/\" + str(item) + \".tscn\"
-	#var new_item = load(item_path)
-	#var item_instance = new_item.instantiate()
-	#side.add_child(item_instance)
+	item.use_collision = false # probably change for type later
+	item.get_parent().remove_child(item)
 	side.add_child(item) #REMOVE PARENT, CHANGE PARENT
+	item.global_position = side.global_position
 
 func _physics_process(delta: float) -> void:
 	$head/Camera3D/HUD/left_test.text = str(data.left)
 	$head/Camera3D/HUD/right_test.text = str(data.right)
 	if Input.is_action_just_pressed(\"left_click\") and data.left != null:
-		data.left.queue_free()
-		data.left = null
-	if Input.is_action_just_pressed(\"right_click\") and data.right != null:
-		data.right.queue_free()
-		data.right = null
+		data.left.activate()
+	elif Input.is_action_just_pressed(\"right_click\") and data.right != null:
+		data.right.activate()
 	
 	hit = interact_ray.get_collider()
 	$head/Camera3D/HUD/interact_test.visible = can_interact 
@@ -123,8 +120,10 @@ func _physics_process(delta: float) -> void:
 			hit.interact()
 	elif hit and hit.is_in_group(\"Item\"):
 		can_pickup = true
-		if Input.is_action_just_pressed(\"left_click\"):
+		if Input.is_action_just_pressed(\"left_click\") and data.left == null:
 			get_item(hit, left_node)
+		elif Input.is_action_just_pressed(\"right_click\") and data.right == null:
+			get_item(hit, right_node)
 	else:
 		can_interact = false
 		can_pickup = false
@@ -137,9 +136,8 @@ func _physics_process(delta: float) -> void:
 		get_tree().call_deferred(\"reload_current_scene\")
 	
 	time_since_hunger += delta
-	clamp(data.hunger, 0, data.max_hunger)
 	if time_since_hunger >= hunger_down_time:
-		data.hunger -= hunger_down_amount
+		data.hunger = clamp(data.hunger - 5, 0, data.max_hunger)
 		time_since_hunger = 0.0
 	
 	if data.hunger <= 0:

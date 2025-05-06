@@ -1,4 +1,7 @@
-[gd_scene format=3 uid="uid://baqr51kg5oeuh"]
+[gd_scene load_steps=2 format=3 uid="uid://baqr51kg5oeuh"]
+
+[ext_resource type="Script" uid="uid://dohl5cxr635d6" path="res://test_item.gd" id="1_0l3m6"]
 
 [node name="test_item" type="CSGBox3D" groups=["Item"]]
 size = Vector3(0.1, 0.1, 0.1)
+script = ExtResource("1_0l3m6")
