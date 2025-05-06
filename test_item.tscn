@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://baqr51kg5oeuh"]
+
+[node name="test_item" type="CSGBox3D" groups=["Item"]]
+size = Vector3(0.1, 0.1, 0.1)

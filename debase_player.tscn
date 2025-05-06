@@ -1,4 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://cponqcw7k51d0"]
+[gd_scene load_steps=7 format=3 uid="uid://cponqcw7k51d0"]
+
+[ext_resource type="PackedScene" uid="uid://baqr51kg5oeuh" path="res://test_item.tscn" id="1_6jvax"]
 
 [sub_resource type="GDScript" id="GDScript_5h67k"]
 script/source = "extends CharacterBody3D
@@ -23,20 +25,25 @@ var damage_lock = 0.0
 @onready var health_bar = $head/Camera3D/HUD/health_bar
 @onready var hunger_bar = $head/Camera3D/HUD/hunger_bar
 @onready var interact_ray = $head/Camera3D/interact_ray
+@onready var left_node = $head/Camera3D/Left
+@onready var right_node = $head/Camera3D/Right
+
+@onready var hit = interact_ray.get_collider()
 
 var hunger_down_time = 5.0
 var time_since_hunger = 0.0
-var hunger_down_amount = 3
+var hunger_down_amount = 5
 var starve_time = 5.0
 var starve_timer = 0.0
 
 var can_interact = false
+var can_pickup = false
 
 @export var data = {
 	\"max_health\": 50,
 	\"health\": 50,
 	\"max_hunger\": 100,
-	\"hunger\": 50,
+	\"hunger\": 10,
 	\"left\": null,
 	\"right\": null,
 	\"value_progs\": {
@@ -50,6 +57,14 @@ func player_setup():
 	hunger_bar.value = data.hunger
 	health_bar.max_value = data.max_health
 	health_bar.value = data.health
+	if len(left_node.get_children()) > 0:
+		data.left = left_node.get_child(0)
+	else:
+		data.left = null
+	if len(right_node.get_children()) > 0:
+		data.right = right_node.get_child(0)
+	else:
+		data.right = null
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -80,18 +95,39 @@ func take_damage(dmg):
 			get_tree().reload_current_scene()
 	pass
 
+func get_item(item, side):
+	#var item_path = \"res://items/\" + str(item) + \".tscn\"
+	#var new_item = load(item_path)
+	#var item_instance = new_item.instantiate()
+	#side.add_child(item_instance)
+	side.add_child(item) #REMOVE PARENT, CHANGE PARENT
+
 func _physics_process(delta: float) -> void:
-	for interactable in get_tree().get_nodes_in_group(\"Interactable\"):
-		if interact_ray.is_colliding() and interact_ray.get_collider() == interactable:
-			can_interact = true
-			if Input.is_action_just_pressed(\"interact\") and can_interact:
-				interactable.interact()
-		else:
-			can_interact = false
-	if can_interact:
-		$head/Camera3D/HUD/interact_test.visible = true
+	$head/Camera3D/HUD/left_test.text = str(data.left)
+	$head/Camera3D/HUD/right_test.text = str(data.right)
+	if Input.is_action_just_pressed(\"left_click\") and data.left != null:
+		data.left.queue_free()
+		data.left = null
+	if Input.is_action_just_pressed(\"right_click\") and data.right != null:
+		data.right.queue_free()
+		data.right = null
+	
+	hit = interact_ray.get_collider()
+	$head/Camera3D/HUD/interact_test.visible = can_interact 
+	$head/Camera3D/HUD/pickup_test.visible = can_pickup
+	$head/Camera3D/HUD/interact_test.text = str(hit)
+	$head/Camera3D/HUD/pickup_test.text = str(hit)
+	if hit and hit.is_in_group(\"Interactable\"):
+		can_interact = true
+		if Input.is_action_just_pressed(\"interact\") and can_interact:
+			hit.interact()
+	elif hit and hit.is_in_group(\"Item\"):
+		can_pickup = true
+		if Input.is_action_just_pressed(\"left_click\"):
+			get_item(hit, left_node)
 	else:
-		$head/Camera3D/HUD/interact_test.visible = false
+		can_interact = false
+		can_pickup = false
 	
 	if data.health <= 0:
 		#kill
@@ -101,6 +137,7 @@ func _physics_process(delta: float) -> void:
 		get_tree().call_deferred(\"reload_current_scene\")
 	
 	time_since_hunger += delta
+	clamp(data.hunger, 0, data.max_hunger)
 	if time_since_hunger >= hunger_down_time:
 		data.hunger -= hunger_down_amount
 		time_since_hunger = 0.0
@@ -231,5 +268,58 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "interact"
 
+[node name="pickup_test" type="Label" parent="head/Camera3D/HUD"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.5
+offset_top = -11.5
+offset_right = 30.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "interact"
+
+[node name="left_test" type="Label" parent="head/Camera3D/HUD"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -206.0
+offset_top = -22.0
+offset_right = -140.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "left item"
+
+[node name="right_test" type="Label" parent="head/Camera3D/HUD"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 132.0
+offset_top = -24.0
+offset_right = 198.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "right item"
+
 [node name="interact_ray" type="RayCast3D" parent="head/Camera3D"]
 target_position = Vector3(0, 0, -2)
+
+[node name="Left" type="Node3D" parent="head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.515761, -0.287867, -0.627192)
+
+[node name="test_item" parent="head/Camera3D/Left" instance=ExtResource("1_6jvax")]
+
+[node name="Right" type="Node3D" parent="head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.516, -0.288, -0.627)
+
+[node name="test_item" parent="head/Camera3D/Right" instance=ExtResource("1_6jvax")]

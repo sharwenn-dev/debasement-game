@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://7oh13t47s2nr"]
+[gd_scene load_steps=8 format=3 uid="uid://7oh13t47s2nr"]
 
 [ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_gy3sr"]
 [ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_1lwx6"]
 [ext_resource type="PackedScene" uid="uid://d2245jh7nwd32" path="res://interact_test.tscn" id="3_1lwx6"]
+[ext_resource type="PackedScene" uid="uid://br3hswdwcpxt3" path="res://items/test_item.tscn" id="4_dsnr4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
 sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
@@ -71,3 +72,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.244238, 0.628891, 5.19593)
 
 [node name="interact_test2" parent="." groups=["Interactable"] instance=ExtResource("3_1lwx6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.70096, 0.628891, 5.19593)
+
+[node name="test_item" parent="." groups=["Item"] instance=ExtResource("4_dsnr4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.54285, 1.15005, 3.82974)
+use_collision = true
