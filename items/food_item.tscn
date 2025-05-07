@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://baqr51kg5oeuh"]
+
+[ext_resource type="Script" uid="uid://cyhd6s7f5b87p" path="res://items/food_item.gd" id="1_0wi1s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0l3m6"]
+albedo_color = Color(0.51371, 0.266347, 0.0132453, 1)
+
+[node name="food_item" type="CSGBox3D" groups=["Item"]]
+use_collision = true
+collision_layer = 2
+size = Vector3(0.1, 0.1, 0.1)
+material = SubResource("StandardMaterial3D_0l3m6")
+script = ExtResource("1_0wi1s")

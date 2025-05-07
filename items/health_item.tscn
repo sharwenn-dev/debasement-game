@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dftbwujv4puip"]
+
+[ext_resource type="Script" uid="uid://bjdtus0s0tbc0" path="res://items/health_item.gd" id="1_y0p6c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0k58a"]
+albedo_color = Color(0.165063, 0.667333, 0.18057, 1)
+
+[node name="health_item" type="CSGBox3D" groups=["Item"]]
+use_collision = true
+collision_layer = 2
+size = Vector3(0.1, 0.1, 0.1)
+material = SubResource("StandardMaterial3D_0k58a")
+script = ExtResource("1_y0p6c")
