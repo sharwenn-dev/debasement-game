@@ -30,16 +30,13 @@ glow_enabled = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.939693, 0.34202, 1.49502e-08, 0, -4.37114e-08, 1, 0.34202, 0.939693, 4.10753e-08, 0, 0, 0)
-light_color = Color(0.314316, 0.314316, 0.314316, 1)
-light_energy = 10.596
-light_indirect_energy = 0.0
-light_angular_distance = 7.28
-light_negative = true
+light_energy = 11.343
 shadow_enabled = true
 shadow_bias = 1.0
 shadow_normal_bias = 0.35
 shadow_transmittance_bias = 16.0
 directional_shadow_pancake_size = 1024.0
+sky_mode = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_662na")
