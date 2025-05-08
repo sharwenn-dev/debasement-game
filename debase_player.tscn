@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cponqcw7k51d0"]
+[gd_scene load_steps=7 format=3 uid="uid://cponqcw7k51d0"]
 
 [sub_resource type="GDScript" id="GDScript_5h67k"]
 script/source = "extends CharacterBody3D
@@ -22,6 +22,7 @@ var damage_lock = 0.0
 @onready var model = $MeshInstance3D
 @onready var health_bar = $head/Camera3D/HUD/health_bar
 @onready var hunger_bar = $head/Camera3D/HUD/hunger_bar
+@onready var dialogue_box = $head/Camera3D/HUD/dialogue
 @onready var interact_ray = $head/Camera3D/interact_ray
 @onready var floor_ray = $floor_ray
 @onready var left_node = $head/Camera3D/Left
@@ -38,6 +39,11 @@ var starve_timer = 0.0
 
 var can_interact = false
 var can_pickup = false
+
+var current_dialogue_set = null
+var current_dialogue_step = null
+var in_dialogue = false
+var dialogue_cooldown = false
 
 @export var data = {
 	\"max_health\": 50,
@@ -95,6 +101,25 @@ func take_damage(dmg):
 			get_tree().reload_current_scene()
 	pass
 
+func do_dialogue(text_set, page):
+	current_dialogue_set = text_set
+	current_dialogue_step = page
+	if text_set[page] == \"NO DIALOGUE\":
+		current_dialogue_set = null
+		current_dialogue_step = 0
+		dialogue_box.visible = false
+		dialogue_cooldown = true
+		var timer = get_tree().create_timer(0.5)
+		await timer.timeout
+		dialogue_cooldown = false
+		in_dialogue = false
+		return
+	in_dialogue = true
+	dialogue_box.text = text_set[page]
+	dialogue_box.visible = true
+	#get_tree().paused = true
+	
+
 func get_item(item, side):
 	item.use_collision = false # probably change for type later
 	item.get_parent().remove_child(item)
@@ -110,6 +135,11 @@ func drop_item(item):
 	item.global_position.y += 0.05
 
 func _physics_process(delta: float) -> void:
+	if in_dialogue:
+		if Input.is_action_just_pressed(\"interact\") and not dialogue_cooldown:
+			current_dialogue_step += 1
+			do_dialogue(current_dialogue_set, current_dialogue_step)
+	
 	if Input.is_action_just_pressed(\"drop_left\") and data.left != null \\
 	and is_on_floor():
 		drop_item(data.left)
@@ -129,11 +159,11 @@ func _physics_process(delta: float) -> void:
 	$head/Camera3D/HUD/pickup_test.visible = can_pickup
 	$head/Camera3D/HUD/interact_test.text = str(hit)
 	$head/Camera3D/HUD/pickup_test.text = str(hit)
-	if hit and hit.is_in_group(\"Interactable\"):
+	if hit and hit.is_in_group(\"Interactable\") and not in_dialogue:
 		can_interact = true
 		if Input.is_action_just_pressed(\"interact\") and can_interact:
 			hit.interact()
-	elif hit and hit.is_in_group(\"Item\"):
+	elif hit and hit.is_in_group(\"Item\") and not in_dialogue:
 		can_pickup = true
 		if Input.is_action_just_pressed(\"left_click\") and data.left == null:
 			get_item(hit, left_node)
@@ -213,6 +243,15 @@ bg_color = Color(0, 0, 0, 1)
 corner_detail = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jvax"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s4sly"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0, 0, 1)
+border_blend = true
 
 [node name="debase_player" type="CharacterBody3D" groups=["Player"]]
 wall_min_slide_angle = 3.14159
@@ -323,6 +362,23 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "right item"
+
+[node name="dialogue" type="Label" parent="head/Camera3D/HUD"]
+process_mode = 3
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -246.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 45
+theme_override_styles/normal = SubResource("StyleBoxFlat_s4sly")
+text = "dialogue"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="interact_ray" type="RayCast3D" parent="head/Camera3D"]
 target_position = Vector3(0, 0, -2)
