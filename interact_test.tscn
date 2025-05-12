@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://crcygj3omt8eg" path="res://interact_test.gd" id="1_lkiyx"]
 
-[node name="interact_test" type="CSGBox3D"]
+[node name="interact_test" type="CSGBox3D" groups=["Interactable"]]
 use_collision = true
 size = Vector3(0.25, 0.25, 0.25)
 script = ExtResource("1_lkiyx")

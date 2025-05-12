@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://7oh13t47s2nr"]
+[gd_scene load_steps=10 format=3 uid="uid://7oh13t47s2nr"]
 
 [ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_gy3sr"]
 [ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_1lwx6"]
 [ext_resource type="PackedScene" uid="uid://d2245jh7nwd32" path="res://interact_test.tscn" id="3_1lwx6"]
 [ext_resource type="PackedScene" uid="uid://baqr51kg5oeuh" path="res://items/food_item.tscn" id="4_dsnr4"]
 [ext_resource type="PackedScene" uid="uid://dftbwujv4puip" path="res://items/health_item.tscn" id="5_lf0gk"]
+[ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://base_human.tscn" id="6_cnaw2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
 sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
@@ -65,7 +66,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6876, 3.35481, -10.6308)
 use_collision = true
 size = Vector3(11.5186, 6.46063, 12.9678)
 
-[node name="interact_test" parent="." groups=["Interactable"] instance=ExtResource("3_1lwx6")]
+[node name="interact_test" parent="." instance=ExtResource("3_1lwx6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.244238, 0.628891, 5.19593)
 
 [node name="food_item" parent="." instance=ExtResource("4_dsnr4")]
@@ -85,3 +86,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.87245, 0.235952, 2.73028)
 
 [node name="health_item2" parent="." instance=ExtResource("5_lf0gk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.42075, 0.235952, 2.73028)
+
+[node name="base_human" parent="." instance=ExtResource("6_cnaw2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.61846, 0.92159, -14.321)

@@ -4,9 +4,9 @@ extends CSGBox3D
 @onready var data = player.data
 
 @export var dialogue = [
-	"debase cube mode",
-	"you wouldn't get it",
-	"you're not even a cube",
+	"GURT: YO",
+	"you wouldn't get it YO",
+	"you're not even GURT: YO",
 	"NO DIALOGUE"
 ]
 

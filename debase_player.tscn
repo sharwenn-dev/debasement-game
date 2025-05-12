@@ -118,7 +118,17 @@ func do_dialogue(text_set, page):
 	dialogue_box.text = text_set[page]
 	dialogue_box.visible = true
 	#get_tree().paused = true
-	
+
+func end_dialogue():
+	current_dialogue_set = null
+	current_dialogue_step = 0
+	dialogue_box.visible = false
+	dialogue_cooldown = true
+	var timer = get_tree().create_timer(0.5)
+	await timer.timeout
+	dialogue_cooldown = false
+	in_dialogue = false
+	return
 
 func get_item(item, side):
 	item.use_collision = false # probably change for type later
@@ -139,7 +149,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed(\"interact\") and not dialogue_cooldown:
 			current_dialogue_step += 1
 			do_dialogue(current_dialogue_set, current_dialogue_step)
-	
+		
 	if Input.is_action_just_pressed(\"drop_left\") and data.left != null \\
 	and is_on_floor():
 		drop_item(data.left)
@@ -253,7 +263,7 @@ border_width_bottom = 15
 border_color = Color(0, 0, 0, 1)
 border_blend = true
 
-[node name="debase_player" type="CharacterBody3D" groups=["Player"]]
+[node name="debase_player" type="CharacterBody3D" groups=["Human", "Player"]]
 wall_min_slide_angle = 3.14159
 script = SubResource("GDScript_5h67k")
 
