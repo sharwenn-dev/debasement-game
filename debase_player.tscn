@@ -27,6 +27,7 @@ var damage_lock = 0.0
 @onready var floor_ray = $floor_ray
 @onready var left_node = $head/Camera3D/Left
 @onready var right_node = $head/Camera3D/Right
+@onready var hitbox_pos = $head/Camera3D/hitbox_pos
 
 @onready var hit = interact_ray.get_collider()
 @onready var floor_hit = floor_ray.get_collider()
@@ -42,6 +43,7 @@ var can_pickup = false
 
 var current_dialogue_set = null
 var current_dialogue_step = null
+var dialogue_character = null
 var in_dialogue = false
 var dialogue_cooldown = false
 
@@ -101,12 +103,16 @@ func take_damage(dmg):
 			get_tree().reload_current_scene()
 	pass
 
-func do_dialogue(text_set, page):
+func do_dialogue(text_set, page, character):
 	current_dialogue_set = text_set
 	current_dialogue_step = page
+	dialogue_character = character
 	if text_set[page] == \"NO DIALOGUE\":
 		current_dialogue_set = null
 		current_dialogue_step = 0
+		dialogue_character.dialogue_range.monitoring = false
+		dialogue_character.in_dialogue_range = false
+		dialogue_character = null
 		dialogue_box.visible = false
 		dialogue_cooldown = true
 		var timer = get_tree().create_timer(0.5)
@@ -148,7 +154,7 @@ func _physics_process(delta: float) -> void:
 	if in_dialogue:
 		if Input.is_action_just_pressed(\"interact\") and not dialogue_cooldown:
 			current_dialogue_step += 1
-			do_dialogue(current_dialogue_set, current_dialogue_step)
+			do_dialogue(current_dialogue_set, current_dialogue_step, dialogue_character)
 		
 	if Input.is_action_just_pressed(\"drop_left\") and data.left != null \\
 	and is_on_floor():
@@ -399,6 +405,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.515761, -0.287867, -0.6271
 
 [node name="Right" type="Node3D" parent="head/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.516, -0.288, -0.627)
+
+[node name="hitbox_pos" type="Node3D" parent="head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.153035, -1.01779)
 
 [node name="floor_ray" type="RayCast3D" parent="."]
 target_position = Vector3(0, -2.5, 0)

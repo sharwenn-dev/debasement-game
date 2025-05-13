@@ -11,6 +11,5 @@ extends CSGBox3D
 ]
 
 func interact():
-	#data.hunger = clamp(data.hunger + 30, 0, data.max_hunger)
-	#queue_free()
-	player.do_dialogue(dialogue, 0)
+	data.hunger = clamp(data.hunger + 30, 0, data.max_hunger)
+	queue_free()

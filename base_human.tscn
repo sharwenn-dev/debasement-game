@@ -12,7 +12,7 @@ height = 2.07274
 radius = 3.50363
 height = 9.66309
 
-[node name="base_human" type="CharacterBody3D" groups=["Human", "Interactable"]]
+[node name="base_human" type="CharacterBody3D" groups=["Hittable", "Human", "Interactable"]]
 script = ExtResource("1_4ucnw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -24,6 +24,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00091821, 0.290228, 0)
 shape = SubResource("CapsuleShape3D_4ucnw")
 
 [node name="dialogue_range" type="Area3D" parent="."]
+monitoring = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="dialogue_range"]
 shape = SubResource("CapsuleShape3D_mdtil")
