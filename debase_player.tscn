@@ -51,7 +51,7 @@ var dialogue_cooldown = false
 	\"max_health\": 50,
 	\"health\": 50,
 	\"max_hunger\": 100,
-	\"hunger\": 10,
+	\"hunger\": 70,
 	\"left\": null,
 	\"right\": null,
 	\"value_progs\": {
@@ -123,7 +123,6 @@ func do_dialogue(text_set, page, character):
 	in_dialogue = true
 	dialogue_box.text = text_set[page]
 	dialogue_box.visible = true
-	#get_tree().paused = true
 
 func end_dialogue():
 	current_dialogue_set = null
@@ -136,17 +135,21 @@ func end_dialogue():
 	in_dialogue = false
 	return
 
-func get_item(item, side):
+func get_item(item, side, rotation):
 	item.use_collision = false # probably change for type later
 	item.get_parent().remove_child(item)
 	side.add_child(item) #REMOVE PARENT, CHANGE PARENT
+	item.rotation = rotation
 	item.global_position = side.global_position
 
-func drop_item(item):
+func drop_item(item, rotation):
 	var point = floor_ray.get_collision_point()
+	var rand_rotate = randf()
 	item.get_parent().remove_child(item)
 	get_tree().get_root().add_child(item)
 	item.use_collision = true
+	rotation = rotation.normalized()
+	item.rotate_object_local(rotation, rand_rotate)
 	item.global_position = point
 	item.global_position.y += 0.05
 
@@ -158,10 +161,10 @@ func _physics_process(delta: float) -> void:
 		
 	if Input.is_action_just_pressed(\"drop_left\") and data.left != null \\
 	and is_on_floor():
-		drop_item(data.left)
+		drop_item(data.left, data.left.floor_rotation)
 	if Input.is_action_just_pressed(\"drop_right\") and data.right != null \\
 	and is_on_floor():
-		drop_item(data.right)
+		drop_item(data.right, data.right.floor_rotation)
 	
 	$head/Camera3D/HUD/left_test.text = str(data.left)
 	$head/Camera3D/HUD/right_test.text = str(data.right)
@@ -182,9 +185,9 @@ func _physics_process(delta: float) -> void:
 	elif hit and hit.is_in_group(\"Item\") and not in_dialogue:
 		can_pickup = true
 		if Input.is_action_just_pressed(\"left_click\") and data.left == null:
-			get_item(hit, left_node)
+			get_item(hit, left_node, hit.pickup_rotation)
 		elif Input.is_action_just_pressed(\"right_click\") and data.right == null:
-			get_item(hit, right_node)
+			get_item(hit, right_node, hit.pickup_rotation)
 	else:
 		can_interact = false
 		can_pickup = false

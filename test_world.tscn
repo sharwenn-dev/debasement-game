@@ -50,7 +50,7 @@ use_collision = true
 size = Vector3(67.3447, 0.350708, 71.8037)
 
 [node name="debase_player" parent="." instance=ExtResource("2_1lwx6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37611, 5.80487, -4.52524)
+transform = Transform3D(-0.692458, 0, 0.721458, 0, 1, 0, -0.721458, 0, -0.692458, -4.12876, 1.28702, -2.24763)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2213, 3.35481, 12.5526)
@@ -96,4 +96,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.454211, 0.92159, 1.75279)
 dialogue = ["GURT", "GURT: YO", "NO DIALOGUE"]
 
 [node name="test_weapon" parent="." instance=ExtResource("7_kt6p6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0881, 0.55254, 0.942861)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -8.24763, 0.246489, 0.67165)
