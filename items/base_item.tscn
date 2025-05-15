@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cytnfro4xomb5"]
+
+[ext_resource type="Script" uid="uid://ba1f5mhb3v0pm" path="res://items/base_item.gd" id="1_m53hc"]
+
+[node name="base_item" type="CSGBox3D"]
+script = ExtResource("1_m53hc")

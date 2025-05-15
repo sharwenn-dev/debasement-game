@@ -6,5 +6,5 @@
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.503021, 0)
 use_collision = true
 collision_layer = 2
-size = Vector3(0.1, 0.69303, 0.1)
+size = Vector3(0.1, 0.1, 0.8)
 script = ExtResource("1_p266q")

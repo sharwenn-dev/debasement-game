@@ -1,7 +1,8 @@
-extends CSGBox3D
+extends BaseItem
 
-@onready var player = get_tree().get_first_node_in_group("Player")
-@onready var data = player.data
+@warning_ignore("unused_parameter")
+func _process(delta: float) -> void:
+	check_origin()
 
 func activate():
 	data.health = clamp(data.health + 20, 0, data.max_health)
