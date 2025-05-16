@@ -42,7 +42,7 @@ func _physics_process(delta: float) -> void:
 	#if player.in_dialogue and dialogue_range.monitoring and not in_dialogue_range:
 		#player.end_dialogue() # FIX HERE!!!!
 	if data.health <= 0:
-		player.data.value_progs.kills += 1
+		player.data.value.kills += 1
 		queue_free()
 
 func interact():

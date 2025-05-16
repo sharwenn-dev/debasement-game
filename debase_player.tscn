@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cponqcw7k51d0"]
+[gd_scene load_steps=8 format=3 uid="uid://cponqcw7k51d0"]
 
 [sub_resource type="GDScript" id="GDScript_5h67k"]
 script/source = "extends CharacterBody3D
@@ -18,6 +18,7 @@ var t_bob = 0.0
 
 var inertia = Vector3.ZERO
 var damage_lock = 0.0
+var fastest_falling = 0.0
 
 @onready var model = $MeshInstance3D
 @onready var health_bar = $head/Camera3D/HUD/health_bar
@@ -54,9 +55,10 @@ var dialogue_cooldown = false
 	\"hunger\": 70,
 	\"left\": null,
 	\"right\": null,
-	\"value_progs\": {
+	\"value\": {
 		\"kills\": 0,
-		\"starve_time\": 0
+		\"starve_time\": 0,
+		\"fall_damage\": 0,
 	},
 }
 
@@ -92,16 +94,22 @@ func headbob(time):
 	pos.y = sin(time * BOB_FREQ) * BOB_AMP
 	return pos
 
-func take_damage(dmg):
-	if damage_lock == 0.0:
+func take_damage(dmg, type):
+	if damage_lock == 0.0 and type != \"fall\":
 		damage_lock = 0.5
 		data.health -= dmg
-		if data.health <= 0:
-			await get_tree().create_timer(0.25).timeout
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			OS.alert(\"You died!\")
-			get_tree().reload_current_scene()
+	elif type == \"fall\":
+		data.health -= dmg
+		data.value.fall_damage += dmg
 	pass
+
+func kill_check():
+	if data.health <= 0:
+		await get_tree().create_timer(0.25).timeout
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		OS.alert(\"dead\")
+		get_tree().call_deferred(\"reload_current_scene\")
 
 func do_dialogue(text_set, page, character):
 	current_dialogue_set = text_set
@@ -162,8 +170,8 @@ func _physics_process(delta: float) -> void:
 	and is_on_floor():
 		drop_item(data.right)
 	
-	$head/Camera3D/HUD/left_test.text = str(data.value_progs.kills)
-	$head/Camera3D/HUD/right_test.text = str(data.right)
+	$head/Camera3D/HUD/left_test.text = str(data.value.kills)
+	$head/Camera3D/HUD/right_test.text = str(velocity.y)
 	if Input.is_action_just_pressed(\"left_click\") and data.left != null:
 		data.left.activate() 
 	elif Input.is_action_just_pressed(\"right_click\") and data.right != null:
@@ -189,11 +197,7 @@ func _physics_process(delta: float) -> void:
 		can_pickup = false
 	
 	if data.health <= 0:
-		#kill
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		OS.alert(\"dead\")
-		get_tree().call_deferred(\"reload_current_scene\")
+		pass
 	
 	time_since_hunger += delta
 	if time_since_hunger >= hunger_down_time:
@@ -216,7 +220,12 @@ func _physics_process(delta: float) -> void:
 		get_tree().call_deferred(\"reload_current_scene\")
 	
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		velocity += get_gravity() * delta * 2
+		fastest_falling = abs(velocity.y)
+	if is_on_floor():
+		if fastest_falling >= 10.0:
+			take_damage(fastest_falling*2.25, \"fall\")
+			fastest_falling = 0.0
 	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		
@@ -243,7 +252,7 @@ func _physics_process(delta: float) -> void:
 	
 	damage_lock = max(damage_lock-delta, 0.0)
 	player_setup()
-	
+	kill_check()
 	move_and_slide()
 "
 
@@ -267,6 +276,17 @@ border_width_right = 15
 border_width_bottom = 15
 border_color = Color(0, 0, 0, 1)
 border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ijgc"]
+draw_center = false
+border_width_left = 20
+border_width_top = 20
+border_width_right = 20
+border_width_bottom = 20
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+shadow_color = Color(0.485703, 0.485704, 0.485703, 0.6)
+shadow_size = 50
 
 [node name="debase_player" type="CharacterBody3D" groups=["Human", "Player"]]
 wall_min_slide_angle = 3.14159
@@ -392,6 +412,21 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 45
 theme_override_styles/normal = SubResource("StyleBoxFlat_s4sly")
 text = "dialogue"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="head/Camera3D/HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -427.0
+offset_top = 25.0
+offset_right = 427.0
+offset_bottom = 211.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_0ijgc")
+text = "YOU VALUE KILLING"
 horizontal_alignment = 1
 vertical_alignment = 1
 

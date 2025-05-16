@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://di4mp4hatx13m"]
+
+[ext_resource type="Script" uid="uid://7l7iy4i26ybb" path="res://values/base_value.gd" id="1_22skc"]
+
+[node name="base_value" type="Node3D"]
+script = ExtResource("1_22skc")

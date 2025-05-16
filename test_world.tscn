@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://7oh13t47s2nr"]
+[gd_scene load_steps=12 format=3 uid="uid://7oh13t47s2nr"]
 
 [ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_gy3sr"]
 [ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_1lwx6"]
@@ -29,6 +29,9 @@ sky = SubResource("Sky_gpdfc")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kt6p6"]
+albedo_color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+
 [node name="test_world" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -48,9 +51,10 @@ environment = SubResource("Environment_662na")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00811934, 0)
 use_collision = true
 size = Vector3(67.3447, 0.350708, 71.8037)
+material = SubResource("StandardMaterial3D_kt6p6")
 
 [node name="debase_player" parent="." instance=ExtResource("2_1lwx6")]
-transform = Transform3D(-0.692458, 0, 0.721458, 0, 1, 0, -0.721458, 0, -0.692458, -4.12876, 1.28702, -2.24763)
+transform = Transform3D(0.312335, 0, -0.949972, 0, 1, 0, 0.949972, 0, 0.312335, -14.0639, 7.60027, -0.287199)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2213, 3.35481, 12.5526)
