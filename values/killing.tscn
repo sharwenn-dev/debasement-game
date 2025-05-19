@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bd4vqfxg2qloh"]
+
+[ext_resource type="Script" uid="uid://dobog2anvwsie" path="res://values/killing.gd" id="1_oq1lu"]
+
+[node name="killing" type="Node3D"]
+script = ExtResource("1_oq1lu")
+value_name = "YOU VALUE KILLING"

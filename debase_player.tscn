@@ -24,6 +24,7 @@ var fastest_falling = 0.0
 @onready var health_bar = $head/Camera3D/HUD/health_bar
 @onready var hunger_bar = $head/Camera3D/HUD/hunger_bar
 @onready var dialogue_box = $head/Camera3D/HUD/dialogue
+@onready var value_box = $head/Camera3D/HUD/value
 @onready var interact_ray = $head/Camera3D/interact_ray
 @onready var floor_ray = $floor_ray
 @onready var left_node = $head/Camera3D/Left
@@ -49,12 +50,14 @@ var in_dialogue = false
 var dialogue_cooldown = false
 
 @export var data = {
+	\"STATE\": \"alive\",
 	\"max_health\": 50,
 	\"health\": 50,
 	\"max_hunger\": 100,
 	\"hunger\": 70,
 	\"left\": null,
 	\"right\": null,
+	\"values\": [],
 	\"value\": {
 		\"kills\": 0,
 		\"starve_time\": 0,
@@ -109,6 +112,7 @@ func kill_check():
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		OS.alert(\"dead\")
+		data.STATE = \"dead\"
 		get_tree().call_deferred(\"reload_current_scene\")
 
 func do_dialogue(text_set, page, character):
@@ -151,11 +155,12 @@ func get_item(item, side):
 
 func drop_item(item):
 	var point = floor_ray.get_collision_point()
-	item.get_parent().remove_child(item)
-	get_tree().get_root().add_child(item)
-	item.use_collision = true
-	item.global_position = point
-	item.global_position.y += 0.05
+	if item != null:
+		item.get_parent().remove_child(item)
+		get_tree().get_root().add_child(item)
+		item.use_collision = true
+		item.global_position = point
+		item.global_position.y += 0.05
 
 func _physics_process(delta: float) -> void:
 	if in_dialogue:
@@ -171,7 +176,7 @@ func _physics_process(delta: float) -> void:
 		drop_item(data.right)
 	
 	$head/Camera3D/HUD/left_test.text = str(data.value.kills)
-	$head/Camera3D/HUD/right_test.text = str(velocity.y)
+	$head/Camera3D/HUD/right_test.text = str(data.values)
 	if Input.is_action_just_pressed(\"left_click\") and data.left != null:
 		data.left.activate() 
 	elif Input.is_action_just_pressed(\"right_click\") and data.right != null:
@@ -415,7 +420,8 @@ text = "dialogue"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="head/Camera3D/HUD"]
+[node name="value" type="Label" parent="head/Camera3D/HUD"]
+visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -426,7 +432,6 @@ offset_bottom = 211.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_0ijgc")
-text = "YOU VALUE KILLING"
 horizontal_alignment = 1
 vertical_alignment = 1
 
