@@ -54,7 +54,7 @@ size = Vector3(67.3447, 0.350708, 71.8037)
 material = SubResource("StandardMaterial3D_kt6p6")
 
 [node name="debase_player" parent="." instance=ExtResource("2_1lwx6")]
-transform = Transform3D(0.312335, 0, -0.949972, 0, 1, 0, 0.949972, 0, 0.312335, -14.0639, 7.60027, -0.287199)
+transform = Transform3D(0.312335, 0, -0.949972, 0, 1, 0, 0.949972, 0, 0.312335, -14.0639, 7.31496, -0.287199)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2213, 3.35481, 12.5526)
