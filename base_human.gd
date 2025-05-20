@@ -21,9 +21,8 @@ var can_be_hit = true
 	"NO DIALOGUE"
 ]
 
-@export var dialogue2 = [
-	"I SAID THATS WHAT THEY CALLED ME IN HIGH SCHOOL",
-	"go away",
+@export var killing_dialogue = [
+	"go away freak",
 	"NO DIALOGUE"
 ]
 
@@ -42,18 +41,17 @@ func _physics_process(delta: float) -> void:
 	#if player.in_dialogue and dialogue_range.monitoring and not in_dialogue_range:
 		#player.end_dialogue() # FIX HERE!!!!
 	if data.health <= 0:
-		player.data.value.kills += 1
+		player.data.value.killing += 1
 		queue_free()
 
 func interact():
 	#data.hunger = clamp(data.hunger + 30, 0, data.max_hunger)
 	#queue_free()
-	if data.can_talk:
+	if data.can_talk and player.can_talk:
 		in_dialogue_range = true
 		dialogue_range.monitoring = true
 		player.do_dialogue(dialogue, 0, self)
 		data.talked_to = true
-		data.dialogue_set = dialogue2
 
 func _on_dialogue_range_body_entered(body: Node3D) -> void:
 	if body == player:

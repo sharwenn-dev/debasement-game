@@ -4,9 +4,9 @@ func _ready() -> void:
 	initialized = false
 
 func value_effects():
-	player.drop_item(player.data.left)
-	player.drop_item(player.data.right)
-	player.can_talk = false
+	player.JUMP_VELOCITY += 3.0
+	player.fall_dmg_mult = 2.0
+	player.fall_dmg_thresh -= 3
 
 func initialize():
 	if not initialized:

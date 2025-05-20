@@ -4,7 +4,9 @@
 script/source = "extends CharacterBody3D
 
 var SPEED = 4.0
-const JUMP_VELOCITY = 5.0
+var JUMP_VELOCITY = 5.0
+var fall_dmg_mult = 1.5
+var fall_dmg_thresh = 10.0
 
 const CAM_SENS = 0.03
 @onready var camera = $head/Camera3D
@@ -42,6 +44,7 @@ var starve_timer = 0.0
 
 var can_interact = false
 var can_pickup = false
+var can_talk = true
 
 var current_dialogue_set = null
 var current_dialogue_step = null
@@ -51,6 +54,7 @@ var dialogue_cooldown = false
 
 @export var data = {
 	\"STATE\": \"alive\",
+	\"can_get_value\": true,
 	\"max_health\": 50,
 	\"health\": 50,
 	\"max_hunger\": 100,
@@ -59,9 +63,9 @@ var dialogue_cooldown = false
 	\"right\": null,
 	\"values\": [],
 	\"value\": {
-		\"kills\": 0,
-		\"starve_time\": 0,
-		\"fall_damage\": 0,
+		\"killing\": 0,
+		\"starving\": 0,
+		\"falling\": 0,
 	},
 }
 
@@ -104,7 +108,7 @@ func take_damage(dmg, type):
 		data.health -= dmg
 	elif type == \"fall\":
 		data.health -= dmg
-		data.value.fall_damage += dmg
+		data.value.falling += dmg
 	pass
 
 func kill_check():
@@ -168,7 +172,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed(\"interact\") and not dialogue_cooldown:
 			current_dialogue_step += 1
 			do_dialogue(current_dialogue_set, current_dialogue_step, dialogue_character)
-		
+	
 	if Input.is_action_just_pressed(\"drop_left\") and data.left != null \\
 	and is_on_floor():
 		drop_item(data.left)
@@ -176,8 +180,8 @@ func _physics_process(delta: float) -> void:
 	and is_on_floor():
 		drop_item(data.right)
 	
-	$head/Camera3D/HUD/left_test.text = str(data.value.kills)
-	$head/Camera3D/HUD/right_test.text = str(data.values)
+	$head/Camera3D/HUD/left_test.text = str(data.value.killing)
+	$head/Camera3D/HUD/right_test.text = str(data.value.falling)
 	if Input.is_action_just_pressed(\"left_click\") and data.left != null:
 		data.left.activate() 
 	elif Input.is_action_just_pressed(\"right_click\") and data.right != null:
@@ -229,8 +233,8 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta * 2
 		fastest_falling = abs(velocity.y)
 	if is_on_floor():
-		if fastest_falling >= 10.0:
-			take_damage(fastest_falling*2.25, \"fall\")
+		if fastest_falling >= fall_dmg_thresh:
+			take_damage(fastest_falling*fall_dmg_mult, \"fall\")
 			fastest_falling = 0.0
 	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
 		velocity.y = JUMP_VELOCITY

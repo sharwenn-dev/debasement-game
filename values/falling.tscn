@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b38qda8iri1jc"]
+
+[ext_resource type="Script" uid="uid://d1gi7ns07qep3" path="res://values/falling.gd" id="1_03m8m"]
+
+[node name="falling" type="Node3D"]
+script = ExtResource("1_03m8m")
+value_name = "YOU VALUE FALLING"

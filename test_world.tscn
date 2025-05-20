@@ -101,3 +101,12 @@ dialogue = ["GURT", "GURT: YO", "NO DIALOGUE"]
 
 [node name="test_weapon" parent="." instance=ExtResource("7_kt6p6")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -8.24763, 0.246489, 0.67165)
+
+[node name="base_human3" parent="." instance=ExtResource("6_cnaw2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2179, 7.32324, 8.73051)
+
+[node name="base_human4" parent="." instance=ExtResource("6_cnaw2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.2341, 7.32324, 5.03332)
+
+[node name="test_weapon2" parent="." instance=ExtResource("7_kt6p6")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -11.8481, 7.08815, 0.802188)
