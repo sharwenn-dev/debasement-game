@@ -13,3 +13,4 @@ func initialize():
 		player.value_box.visible = false
 		player.value_box.text = ""
 		initialized = true
+		queue_free()

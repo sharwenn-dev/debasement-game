@@ -83,6 +83,7 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	model.visible = false
 	player_setup()
+	ValueHandle.value_reset()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and \\

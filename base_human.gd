@@ -64,3 +64,8 @@ func _on_dialogue_range_body_exited(body: Node3D) -> void:
 	if body == player:
 		in_dialogue_range = false
 		player.end_dialogue()
+
+# Sup Choombas - Jake
+	# choombas = [Owen, Jake, GURT]
+	# choombas.remove_at(2) 
+	# choombas.append("Johnny Silverhand")
