@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://byho64fnbpypi"]
+
+[ext_resource type="Script" uid="uid://bmlyh13ohjf75" path="res://poi.gd" id="1_yfmsu"]
+
+[node name="poi" type="Node3D"]
+script = ExtResource("1_yfmsu")
