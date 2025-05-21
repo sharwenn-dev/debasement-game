@@ -4,9 +4,9 @@ extends Node
 @onready var Pvalue = player.data.value
 
 var values = {
-	"killing": [2, false],
+	"killing": [3, false],
 	"starving": [30, false],
-	"falling": [20, false],
+	"falling": [40, false],
 }
 
 func value_reset():
