@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://7oh13t47s2nr"]
+[gd_scene load_steps=15 format=3 uid="uid://7oh13t47s2nr"]
 
 [ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_gy3sr"]
 [ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_1lwx6"]
@@ -8,7 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://base_human.tscn" id="6_cnaw2"]
 [ext_resource type="PackedScene" uid="uid://djgouormmp0rs" path="res://spawnables/items/test_weapon.tscn" id="7_kt6p6"]
 [ext_resource type="PackedScene" uid="uid://u3cp4vqlxx8b" path="res://spawnables/structures/test_structure.tscn" id="8_uu1iw"]
-[ext_resource type="PackedScene" uid="uid://dokr118xracon" path="res://spawnables/hazards/test_hazard.tscn" id="9_4tg7h"]
+[ext_resource type="PackedScene" uid="uid://dokr118xracon" path="res://spawnables/structures/test_hazard.tscn" id="9_4tg7h"]
+[ext_resource type="PackedScene" uid="uid://byho64fnbpypi" path="res://poi.tscn" id="10_ud3vi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
 sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
@@ -56,7 +57,7 @@ size = Vector3(67.3447, 0.350708, 71.8037)
 material = SubResource("StandardMaterial3D_kt6p6")
 
 [node name="debase_player" parent="." instance=ExtResource("2_1lwx6")]
-transform = Transform3D(0.312335, 0, -0.949972, 0, 1, 0, 0.949972, 0, 0.312335, -14.0639, 7.31496, -0.287199)
+transform = Transform3D(0.312335, 0, -0.949972, 0, 1, 0, 0.949972, 0, 0.312335, -18.7193, 7.31496, 0.716961)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2213, 3.35481, 12.5526)
@@ -118,3 +119,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.56692, 1.18347, -8.10974)
 
 [node name="test_hazard" parent="." instance=ExtResource("9_4tg7h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.67892, 0.255468, 23.7558)
+
+[node name="poi" parent="." instance=ExtResource("10_ud3vi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.746406, 0.183473, -8.02807)
+
+[node name="poi2" parent="." instance=ExtResource("10_ud3vi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.6055, 6.58512, -0.496001)
