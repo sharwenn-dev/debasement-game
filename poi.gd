@@ -7,10 +7,11 @@ var chosen_array = null
 var chosen_spawnable = null
 
 # choosable folders in dictionary
-@export var folders = [
-	"items",
-	"structures"
-]
+@export var folders = {
+	"items": true,
+	"hazards": false,
+	"structures": true
+}
 
 # items for each folder or very well designed for loop
 @export var items = [
@@ -19,8 +20,11 @@ var chosen_spawnable = null
 	"test_weapon"
 ]
 
+@export var hazards = [
+	"test_hazard"
+]
+
 @export var structures = [
-	"test_hazard",
 	"test_structure"
 ]
 
@@ -28,21 +32,21 @@ func _ready() -> void:
 	spawn_spawnable()
 
 func choose_spawnable():
-	var rand_folder = randi_range(0, 1)
+	var rand_folder = randi_range(0, 2)
 	if rand_folder == 0:
 		chosen_folder = "items"
 		chosen_array = items
 	if rand_folder == 1:
+		chosen_folder = "hazards"
+		chosen_array = hazards
+	if rand_folder == 2:
 		chosen_folder = "structures"
 		chosen_array = structures
 	var rand_spawnable = randi_range(0, len(chosen_array)-1)
 	chosen_spawnable = chosen_array[rand_spawnable]
 
 func spawn_spawnable():
-	
 	choose_spawnable()
-	
-	
 	var spawn_path = load(spawn_folder + chosen_folder + "/"\
 	+ chosen_spawnable + ".tscn")
 	var spawn_scene = spawn_path.instantiate()

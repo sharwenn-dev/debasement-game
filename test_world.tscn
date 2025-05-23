@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://base_human.tscn" id="6_cnaw2"]
 [ext_resource type="PackedScene" uid="uid://djgouormmp0rs" path="res://spawnables/items/test_weapon.tscn" id="7_kt6p6"]
 [ext_resource type="PackedScene" uid="uid://u3cp4vqlxx8b" path="res://spawnables/structures/test_structure.tscn" id="8_uu1iw"]
-[ext_resource type="PackedScene" uid="uid://dokr118xracon" path="res://spawnables/structures/test_hazard.tscn" id="9_4tg7h"]
+[ext_resource type="PackedScene" uid="uid://dokr118xracon" path="res://spawnables/hazards/test_hazard.tscn" id="9_4tg7h"]
 [ext_resource type="PackedScene" uid="uid://byho64fnbpypi" path="res://poi.tscn" id="10_ud3vi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
