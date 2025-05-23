@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3f5jwqlgp2hg"]
+
+[ext_resource type="Script" uid="uid://dy6rvayij360b" path="res://spawnables/structures/base_structure.gd" id="1_p10qk"]
+
+[node name="base_structure" type="Node3D"]
+script = ExtResource("1_p10qk")

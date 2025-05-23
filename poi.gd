@@ -3,6 +3,7 @@ extends Node3D
 @onready var spawn_folder = "res://spawnables/"
 
 var chosen_folder = null
+var chosen_array = null
 var chosen_spawnable = null
 
 # choosable folders in dictionary
@@ -26,12 +27,22 @@ var chosen_spawnable = null
 func _ready() -> void:
 	spawn_spawnable()
 
+func choose_spawnable():
+	var rand_folder = randi_range(0, 1)
+	if rand_folder == 0:
+		chosen_folder = "items"
+		chosen_array = items
+	if rand_folder == 1:
+		chosen_folder = "structures"
+		chosen_array = structures
+	var rand_spawnable = randi_range(0, len(chosen_array)-1)
+	chosen_spawnable = chosen_array[rand_spawnable]
+
 func spawn_spawnable():
-	var folder_num = randi_range(0, 1)
-	chosen_folder = folders[folder_num]
-	#str_to_var(chosen_folder)
-	var rand_num = randi_range(0, len(chosen_folder)-1)
-	chosen_spawnable = str_to_var(chosen_folder)[rand_num]
+	
+	choose_spawnable()
+	
+	
 	var spawn_path = load(spawn_folder + chosen_folder + "/"\
 	+ chosen_spawnable + ".tscn")
 	var spawn_scene = spawn_path.instantiate()

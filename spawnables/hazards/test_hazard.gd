@@ -1,6 +1,5 @@
-extends Node3D
+extends BaseStructure
 
-@onready var player = get_tree().get_first_node_in_group("Player")
 @export var dmg = 5
 
 var in_range = false
