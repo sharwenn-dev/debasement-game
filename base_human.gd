@@ -3,6 +3,7 @@ extends CharacterBody3D
 @onready var player = get_tree().get_first_node_in_group("Player")
 @onready var dialogue_range = $dialogue_range
 var in_dialogue_range = false
+var infinite_range = false
 var can_be_hit = true
 
 @export var data = {
@@ -26,7 +27,7 @@ var can_be_hit = true
 	"NO DIALOGUE"
 ]
 
-func take_damage(damage):
+func take_damage(damage, type):
 	if can_be_hit:
 		data.health = clamp(data.health - damage, 0, data.max_health)
 		can_be_hit = false

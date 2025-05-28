@@ -127,8 +127,9 @@ func do_dialogue(text_set, page, character):
 	if text_set[page] == \"NO DIALOGUE\":
 		current_dialogue_set = null
 		current_dialogue_step = 0
-		dialogue_character.dialogue_range.monitoring = false
-		dialogue_character.in_dialogue_range = false
+		if not dialogue_character.infinite_range:
+			dialogue_character.dialogue_range.monitoring = false
+			dialogue_character.in_dialogue_range = false
 		dialogue_character = null
 		dialogue_box.visible = false
 		dialogue_cooldown = true

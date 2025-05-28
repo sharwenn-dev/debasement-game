@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://c03rvdebaskt1"]
+
+[ext_resource type="Script" uid="uid://bv8olty7y14pr" path="res://spawnables/creatures/boulder.gd" id="1_kdopu"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_p7xav"]
+radius = 1.25
+height = 3.25
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kdopu"]
+radius = 1.25
+height = 3.25
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dlqay"]
+radius = 8.03108
+height = 21.8252
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8hkdw"]
+radius = 1.3836
+height = 3.83048
+
+[node name="boulder" type="CharacterBody3D"]
+script = ExtResource("1_kdopu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_p7xav")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_kdopu")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="attack_range" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="attack_range"]
+shape = SubResource("CapsuleShape3D_dlqay")
+
+[node name="attack_area" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="attack_area"]
+shape = SubResource("CapsuleShape3D_8hkdw")

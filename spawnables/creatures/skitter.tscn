@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://cmdvs83juywbx"]
+
+[ext_resource type="Script" uid="uid://cpptikjekpf11" path="res://spawnables/creatures/skitter.gd" id="1_decy3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_evdrq"]
+radius = 0.4
+height = 0.9
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_decy3"]
+radius = 0.4
+height = 0.9
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_th7rg"]
+radius = 8.03108
+height = 21.8252
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ka2sv"]
+radius = 0.582178
+height = 2.1689
+
+[node name="skitter" type="CharacterBody3D" groups=["Hittable", "Passive", "Skitter"]]
+script = ExtResource("1_decy3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_evdrq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_decy3")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="detection_range" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="detection_range"]
+shape = SubResource("CapsuleShape3D_th7rg")
+
+[node name="attack_area" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="attack_area"]
+shape = SubResource("CapsuleShape3D_ka2sv")
