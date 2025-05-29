@@ -31,9 +31,6 @@ var wander_timer = 0.0
 var idle_duration = 5.5
 var move_duration = 3.5
 
-var lunge_timer = 0.0
-var lunge_cooldown = 1.5
-
 @export var data = {
 	"max_health": 50,
 	"health": 50,
@@ -102,7 +99,9 @@ func _physics_process(delta: float) -> void:
 
 	attack_timer = max(attack_timer - delta, 0)
 
-	# never stop chasing first target
+	var dir = Vector3.ZERO  # declare upfront
+
+	# Acquire or lose target logic
 	if not detected_human:
 		target = get_nearest_human()
 		if target:
@@ -118,35 +117,46 @@ func _physics_process(delta: float) -> void:
 
 	if target:
 		SPEED = RUNSPEED
-		nav.target_position = target.global_position + Vector3(randf_range(-1.5, 1.5), 0, randf_range(-1.5, 1.5))
 
-		if nav.distance_to_target() < 0.5:
-			nav.target_position = global_position
+		# Set nav target to the exact player position (no random offset)
+		nav.target_position = target.global_position
 
+		# Calculate direction vector directly toward the target, ignoring nav path points
+		dir = (target.global_position - global_position)
+		dir.y = 0
+
+		# If very close, stop moving (to prevent jitter)
+		if dir.length() < 0.5:
+			dir = Vector3.ZERO
+
+		# Attack logic
 		if atk_area.overlaps_body(target) and attack_timer <= 0:
 			if target.has_method("take_damage"):
 				target.take_damage(ATTACK, "tear")
 			if "inertia" in target:
 				target.inertia = (target.global_position - global_position).normalized() * KNOCKBACK
 			attack_timer = attack_cooldown
+
 	else:
+		# No target: wander normally
 		handle_wandering(delta)
 
-	if target:
-		lunge_timer -= delta
-		if lunge_timer <= 0:
-			velocity += (target.global_position - global_position).normalized() * 12.0
-			lunge_timer = lunge_cooldown + randf_range(0.3, 0.8)
+		# Use nav path for wandering movement
+		dir = nav.get_next_path_position() - global_position
+		dir.y = 0
+		if dir.length() < 0.01:
+			dir = Vector3.ZERO
 
-	var dir = nav.get_next_path_position() - global_position
-	dir.y = 0
-	if dir.length() > 0.01:
+	# Rotate smoothly toward movement direction
+	if dir.length() > 0:
 		var rot_angle = atan2(dir.x, dir.z)
 		rotation.y = lerp_angle(rotation.y, rot_angle, 6 * delta)
 
+	# Move velocity smoothly toward target direction
 	var move_dir = dir.normalized()
 	velocity = velocity.lerp(move_dir * SPEED, ACCEL * delta)
 
+	# Gravity and vertical movement
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
