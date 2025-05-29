@@ -67,7 +67,7 @@ size = Vector3(67.3447, 0.350708, 71.8037)
 material = SubResource("StandardMaterial3D_kt6p6")
 
 [node name="debase_player" parent="NavigationRegion3D" instance=ExtResource("2_1lwx6")]
-transform = Transform3D(-0.999309, 0, -0.0371496, 0, 1, 0, 0.0371496, 0, -0.999309, 12.4267, 7.47728, 9.30169)
+transform = Transform3D(-0.99993, 0, -0.0117634, 0, 1, 0, 0.0117634, 0, -0.99993, 26.0144, 1.72425, 4.89857)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="NavigationRegion3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2213, 3.35481, 12.5526)
@@ -150,3 +150,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4821, 0.633473, -28.7547)
 
 [node name="boulder" parent="." instance=ExtResource("13_jvck6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.1267, 1.80847, 20.3153)
+
+[node name="base_human" parent="." instance=ExtResource("6_cnaw2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.6303, 0.92159, 22.0107)
+
+[node name="base_human2" parent="." instance=ExtResource("6_cnaw2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6251, 0.921589, 28.222)

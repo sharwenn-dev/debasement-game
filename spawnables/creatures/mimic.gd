@@ -31,7 +31,6 @@ var wander_timer = 0.0
 var idle_duration = 5.5
 var move_duration = 3.5
 
-# erratic movement burst
 var lunge_timer = 0.0
 var lunge_cooldown = 1.5
 
@@ -103,7 +102,7 @@ func _physics_process(delta: float) -> void:
 
 	attack_timer = max(attack_timer - delta, 0)
 
-	# Once it detects any human, it locks on and never stops chasing
+	# never stop chasing first target
 	if not detected_human:
 		target = get_nearest_human()
 		if target:
@@ -112,11 +111,11 @@ func _physics_process(delta: float) -> void:
 				player_dialogue_triggered = true
 				_emit_player_detected_signal_or_run_dialogue()
 	else:
-		# keep chasing the locked target if it still exists
 		if target == null or not is_instance_valid(target):
+			detected_human = false
 			target = get_nearest_human()
+			player_dialogue_triggered = false
 
-	# Targeting and movement logic
 	if target:
 		SPEED = RUNSPEED
 		nav.target_position = target.global_position + Vector3(randf_range(-1.5, 1.5), 0, randf_range(-1.5, 1.5))
@@ -124,7 +123,6 @@ func _physics_process(delta: float) -> void:
 		if nav.distance_to_target() < 0.5:
 			nav.target_position = global_position
 
-		# Attack logic with debounce
 		if atk_area.overlaps_body(target) and attack_timer <= 0:
 			if target.has_method("take_damage"):
 				target.take_damage(ATTACK, "tear")
@@ -134,25 +132,21 @@ func _physics_process(delta: float) -> void:
 	else:
 		handle_wandering(delta)
 
-	# lunge burst when chasing
 	if target:
 		lunge_timer -= delta
 		if lunge_timer <= 0:
 			velocity += (target.global_position - global_position).normalized() * 12.0
 			lunge_timer = lunge_cooldown + randf_range(0.3, 0.8)
 
-	# rotate toward next nav point
 	var dir = nav.get_next_path_position() - global_position
 	dir.y = 0
 	if dir.length() > 0.01:
 		var rot_angle = atan2(dir.x, dir.z)
 		rotation.y = lerp_angle(rotation.y, rot_angle, 6 * delta)
 
-	# velocity update
 	var move_dir = dir.normalized()
 	velocity = velocity.lerp(move_dir * SPEED, ACCEL * delta)
 
-	# gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
@@ -164,7 +158,7 @@ func handle_wandering(delta: float):
 	wander_timer -= delta
 	if wander_state == WanderState.IDLE:
 		SPEED = 0.0
-		rotation.y += delta * 0.2  # slow spin
+		rotation.y += delta * 0.2  
 		if wander_timer <= 0:
 			set_wander_move()
 	elif wander_state == WanderState.MOVING:
@@ -189,7 +183,6 @@ func set_wander_move():
 	nav.target_position = new_target
 
 func _emit_player_detected_signal_or_run_dialogue():
-	# Filter out "NO DIALOGUE"
 	var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
 	
 	if valid_lines.size() == 0:

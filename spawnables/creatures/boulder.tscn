@@ -18,7 +18,7 @@ height = 21.8252
 radius = 1.3836
 height = 3.83048
 
-[node name="boulder" type="CharacterBody3D"]
+[node name="boulder" type="CharacterBody3D" groups=["Boulder", "Hittable", "Hostile"]]
 script = ExtResource("1_kdopu")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
