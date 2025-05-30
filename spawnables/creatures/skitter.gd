@@ -39,7 +39,7 @@ var hesitation_duration = 1.0  # seconds to hesitate (full stop)
 }
 
 var infinite_range = true
-@export var skittish_dialogue = [
+@export var player_spotted_dialogue = [
 	"kkkkhh",
 	"runrunrun",
 	"i saw it again",
@@ -206,10 +206,11 @@ func set_wander_move():
 	nav.target_position = new_target
 
 func _emit_player_detected_dialogue():
-	var valid_lines = skittish_dialogue.filter(func(line): return line != "NO DIALOGUE")
-	if valid_lines.size() == 0:
-		return
-	var random_line = valid_lines[randi() % valid_lines.size()]
-	var dialogue_sequence = [random_line, "NO DIALOGUE"]
-	player.do_dialogue(dialogue_sequence, 0, self)
-	print("skittish creature detected player: %s" % random_line)
+	if not player.in_dialogue:
+		var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
+		if valid_lines.size() == 0:
+			return
+		var random_line = valid_lines[randi() % valid_lines.size()]
+		var dialogue_sequence = [random_line, "NO DIALOGUE"]
+		player.do_dialogue(dialogue_sequence, 0, self)
+		print("skitter detected player: %s" % random_line)

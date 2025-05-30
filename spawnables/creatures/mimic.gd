@@ -114,7 +114,7 @@ func _physics_process(delta: float) -> void:
 		if target == null or not is_instance_valid(target):
 			detected_human = false
 			target = get_nearest_human()
-			player_dialogue_triggered = false
+			#player_dialogue_triggered = false
 
 	if target:
 		SPEED = RUNSPEED
@@ -183,14 +183,11 @@ func set_wander_move():
 	nav.target_position = new_target
 
 func _emit_player_detected_signal_or_run_dialogue():
-	var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
-	
-	if valid_lines.size() == 0:
-		print("No valid dialogue lines available.")
-		return
-	
-	var random_line = valid_lines[randi() % valid_lines.size()]
-	var dialogue_sequence = [random_line, "NO DIALOGUE"]
-	
-	player.do_dialogue(dialogue_sequence, 0, self)
-	print("mimic detected player: %s" % random_line)
+	if not player.in_dialogue:
+		var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
+		if valid_lines.size() == 0:
+			return
+		var random_line = valid_lines[randi() % valid_lines.size()]
+		var dialogue_sequence = [random_line, "NO DIALOGUE"]
+		player.do_dialogue(dialogue_sequence, 0, self)
+		print("mimic detected player: %s" % random_line)

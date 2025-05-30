@@ -9,10 +9,10 @@ const GRAVITY_MULT = 8.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVITY_MULT
 
 var SPEED = 3.0
-var ACCEL = 1.0
+var ACCEL = 0.5
 var ATTACK = 12
 var KNOCKBACK = 22.0
-var RUNSPEED = SPEED * 2.5
+var RUNSPEED = SPEED * 1.5
 var WALKSPEED = SPEED * 0.15
 
 var target = null
@@ -32,8 +32,8 @@ var idle_duration = 5.5
 var move_duration = 3.5
 
 @export var data = {
-	"max_health": 50,
-	"health": 50,
+	"max_health": 80,
+	"health": 80,
 	"max_hunger": 100,
 	"hunger": 10,
 }
@@ -101,7 +101,7 @@ func _physics_process(delta: float) -> void:
 
 	var dir = Vector3.ZERO  # declare upfront
 
-	# Acquire or lose target logic
+	# never stop chasing first target
 	if not detected_human:
 		target = get_nearest_human()
 		if target:
@@ -193,14 +193,11 @@ func set_wander_move():
 	nav.target_position = new_target
 
 func _emit_player_detected_signal_or_run_dialogue():
-	var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
-	
-	if valid_lines.size() == 0:
-		print("No valid dialogue lines available.")
-		return
-	
-	var random_line = valid_lines[randi() % valid_lines.size()]
-	var dialogue_sequence = [random_line, "NO DIALOGUE"]
-	
-	player.do_dialogue(dialogue_sequence, 0, self)
-	print("boulder detected player: %s" % random_line)
+	if not player.in_dialogue:
+		var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
+		if valid_lines.size() == 0:
+			return
+		var random_line = valid_lines[randi() % valid_lines.size()]
+		var dialogue_sequence = [random_line, "NO DIALOGUE"]
+		player.do_dialogue(dialogue_sequence, 0, self)
+		print("boulder detected player: %s" % random_line)
