@@ -1,0 +1,104 @@
+[gd_scene load_steps=8 format=3 uid="uid://dglhfw4xxijef"]
+
+[ext_resource type="Script" uid="uid://ctw8gqetpd2ra" path="res://menus/death_menu.gd" id="1_d5a6h"]
+[ext_resource type="FontFile" uid="uid://cggb81otl6rku" path="res://menus/redaction-70-latin-400-normal.ttf" id="1_y3rvq"]
+
+[sub_resource type="Theme" id="Theme_d5a6h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h22ob"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.154876, 0.154876, 0.154876, 1)
+shadow_color = Color(0.458405, 0.458405, 0.458405, 0.6)
+shadow_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_eofxr"]
+font_size = 100
+shadow_size = 5
+shadow_color = Color(0.259294, 0.259294, 0.259294, 0.894118)
+shadow_offset = Vector2(10, 10)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vhfgj"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+shadow_color = Color(0.960351, 0.960351, 0.960351, 0.6)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dksjp"]
+bg_color = Color(0, 0, 0, 1)
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+shadow_color = Color(1, 1, 1, 0.933333)
+
+[node name="death_menu" type="CanvasLayer"]
+script = ExtResource("1_d5a6h")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="message" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_d5a6h")
+theme_override_fonts/font = ExtResource("1_y3rvq")
+theme_override_styles/normal = SubResource("StyleBoxFlat_h22ob")
+label_settings = SubResource("LabelSettings_eofxr")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="life" type="Button" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -133.0
+offset_top = -61.0
+offset_right = 133.0
+offset_bottom = 61.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_y3rvq")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/hover = SubResource("StyleBoxFlat_vhfgj")
+theme_override_styles/normal = SubResource("StyleBoxFlat_dksjp")
+text = "WAKE UP"
+
+[node name="death" type="Button" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -133.0
+offset_top = 77.0
+offset_right = 133.0
+offset_bottom = 199.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_y3rvq")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/hover = SubResource("StyleBoxFlat_vhfgj")
+theme_override_styles/normal = SubResource("StyleBoxFlat_dksjp")
+text = "GIVE UP"
+
+[connection signal="pressed" from="Panel/life" to="." method="_on_life_pressed"]
+[connection signal="pressed" from="Panel/death" to="." method="_on_death_pressed"]

@@ -3,6 +3,7 @@ extends CharacterBody3D
 @onready var atk_area = $attack_area
 @onready var nav = $NavigationAgent3D
 @onready var attack_range = $attack_range
+@onready var aura_range = $aura_range
 @onready var player = get_tree().get_first_node_in_group("Player")
 
 const GRAVITY_MULT = 8.0
@@ -10,8 +11,8 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVIT
 
 var SPEED = 3.0
 var ACCEL = 0.5
-var ATTACK = 12
-var KNOCKBACK = 22.0
+var ATTACK = 25
+var KNOCKBACK = 45.0
 var RUNSPEED = SPEED * 1.5
 var WALKSPEED = SPEED * 0.15
 
@@ -32,32 +33,36 @@ var idle_duration = 5.5
 var move_duration = 3.5
 
 @export var data = {
-	"max_health": 80,
-	"health": 80,
+	"max_health": 500,
+	"health": 500,
 	"max_hunger": 100,
-	"hunger": 10,
+	"hunger": 100,
 }
 
 var infinite_range = true
 @export var player_spotted_dialogue = [
-	"Eating again.",
-	"I see you.",
-	"Why did you come?",
-	"You smell like the others.",
-	"Another one.",
-	"Are you lost?",
-	"This isn't your place.",
-	"Should I chase?",
-	"I'm watching.",
-	"You're not hidden.",
-	"Found something.",
-	"Something else here.",
-	"You're new.",
-	"Still hungry...",
-	"Always moving.",
-	"Another shape.",
+	"I AM THE END.",
+	"YOU CANNOT ESCAPE.",
+	"THE GROUND TREMBLES FOR YOU.",
+	"FEEL THE WEIGHT OF FATE.",
+	"YOUR PATH IS CRUSHED.",
+	"NO SHADOW CAN HIDE YOU.",
+	"I MOVE WITHOUT MERCY.",
+	"THE EARTH REMEMBERS ME.",
+	"I WILL CONSUME ALL.",
+	"STAND STILL AND BE BROKEN.",
+	"THE VOID OPENS BENEATH.",
+	"HARDER THAN STONE.",
+	"YOU ARE INSIGNIFICANT.",
+	"I AM UNSTOPPABLE.",
+	"THE CRUSHING SILENCE COMES.",
+	"NOTHING CAN BLOCK ME.",
 	"NO DIALOGUE"
 ]
+
+var time_in_aura = 0.0
+const AURA_DURATION_TO_LAUNCH = 2.0
+const UPWARD_LAUNCH_VELOCITY = 20.0  # Adjust as needed
 
 func _ready():
 	nav.target_position = global_position
@@ -136,6 +141,19 @@ func _physics_process(delta: float) -> void:
 			if "inertia" in target:
 				target.inertia = (target.global_position - global_position).normalized() * KNOCKBACK
 			attack_timer = attack_cooldown
+
+		# New: Launch the target upward if in aura_range long enough
+		if aura_range.get_overlapping_bodies().has(target):
+			time_in_aura += delta
+			if time_in_aura >= AURA_DURATION_TO_LAUNCH:
+				# Apply upward velocity to the target
+				if target.has_method("add_velocity"):
+					target.add_velocity(Vector3.UP * UPWARD_LAUNCH_VELOCITY)
+				elif "velocity" in target:
+					target.velocity.y = UPWARD_LAUNCH_VELOCITY
+				time_in_aura = 0.0
+		else:
+			time_in_aura = 0.0
 
 	else:
 		# No target: wander normally

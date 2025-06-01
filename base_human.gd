@@ -6,6 +6,8 @@ var in_dialogue_range = false
 var infinite_range = false
 var can_be_hit = true
 
+@export var interact_type = "Talk"
+
 @export var data = {
 	"max_health": 50,
 	"health": 50,

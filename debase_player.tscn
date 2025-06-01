@@ -1,4 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cponqcw7k51d0"]
+[gd_scene load_steps=12 format=3 uid="uid://cponqcw7k51d0"]
+
+[ext_resource type="FontFile" uid="uid://cggb81otl6rku" path="res://menus/redaction-70-latin-400-normal.ttf" id="1_6jvax"]
+[ext_resource type="PackedScene" uid="uid://buei2p7n260rx" path="res://menus/pause_menu.tscn" id="2_s4sly"]
+[ext_resource type="PackedScene" uid="uid://dglhfw4xxijef" path="res://menus/death_menu.tscn" id="3_0ijgc"]
 
 [sub_resource type="GDScript" id="GDScript_5h67k"]
 script/source = "extends CharacterBody3D
@@ -32,6 +36,7 @@ var fastest_falling = 0.0
 @onready var left_node = $head/Camera3D/Left
 @onready var right_node = $head/Camera3D/Right
 @onready var hitbox_pos = $head/Camera3D/hitbox_pos
+@onready var death_menu = $head/Camera3D/death_menu
 
 @onready var hit = interact_ray.get_collider()
 @onready var floor_hit = floor_ray.get_collider()
@@ -74,6 +79,16 @@ func player_setup():
 	hunger_bar.value = data.hunger
 	health_bar.max_value = data.max_health
 	health_bar.value = data.health
+	$head/Camera3D/HUD/interact_test.visible = can_interact 
+	$head/Camera3D/HUD/pickup_test.visible = can_pickup
+	if hit and can_interact:
+		$head/Camera3D/HUD/interact_test.text = hit.interact_type
+	if hit and can_pickup:
+		$head/Camera3D/HUD/pickup_test.text = hit.item_name
+	if can_pickup or can_interact:
+		$head/Camera3D/HUD/crosshair.visible = false
+	else:
+		$head/Camera3D/HUD/crosshair.visible = true
 	if len(left_node.get_children()) > 0:
 		data.left = left_node.get_child(0)
 	else:
@@ -114,11 +129,12 @@ func take_damage(dmg, type):
 func kill_check():
 	if data.health <= 0:
 		await get_tree().create_timer(0.25).timeout
+		$head/Camera3D/HUD.hide()
+		death_menu.activate_death()
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		OS.alert(\"dead\")
 		data.STATE = \"dead\"
-		get_tree().call_deferred(\"reload_current_scene\")
+		get_tree().paused = true
 
 func do_dialogue(text_set, page, character):
 	current_dialogue_set = text_set
@@ -181,18 +197,12 @@ func _physics_process(delta: float) -> void:
 	and is_on_floor():
 		drop_item(data.right)
 	
-	$head/Camera3D/HUD/left_test.text = str(data.value.killing)
-	$head/Camera3D/HUD/right_test.text = str(data.value.falling)
 	if Input.is_action_just_pressed(\"left_click\") and data.left != null:
 		data.left.activate() 
 	elif Input.is_action_just_pressed(\"right_click\") and data.right != null:
 		data.right.activate()
 	
 	hit = interact_ray.get_collider()
-	$head/Camera3D/HUD/interact_test.visible = can_interact 
-	$head/Camera3D/HUD/pickup_test.visible = can_pickup
-	$head/Camera3D/HUD/interact_test.text = str(hit)
-	$head/Camera3D/HUD/pickup_test.text = str(hit)
 	if hit and hit.is_in_group(\"Interactable\") and not in_dialogue:
 		can_interact = true
 		if Input.is_action_just_pressed(\"interact\") and can_interact:
@@ -204,6 +214,7 @@ func _physics_process(delta: float) -> void:
 		elif Input.is_action_just_pressed(\"right_click\") and data.right == null:
 			get_item(hit, right_node)
 	else:
+		hit = null
 		can_interact = false
 		can_pickup = false
 	
@@ -221,9 +232,13 @@ func _physics_process(delta: float) -> void:
 			data.health -= 10
 			starve_timer = 0.0
 	
+	$head/Camera3D/HUD.visible = not get_tree().paused
 	if Input.is_action_just_pressed(\"ui_cancel\"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			$head/Camera3D/HUD.hide()
+			$head/Camera3D/pause_menu.show()
+			get_tree().paused = true
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
@@ -299,6 +314,12 @@ border_blend = true
 shadow_color = Color(0.485703, 0.485704, 0.485703, 0.6)
 shadow_size = 50
 
+[sub_resource type="LabelSettings" id="LabelSettings_6jvax"]
+font_size = 50
+font_color = Color(0.964742, 0.964742, 0.964742, 1)
+shadow_size = 5
+shadow_color = Color(0.0253638, 0.0253638, 0.0253638, 1)
+
 [node name="debase_player" type="CharacterBody3D" groups=["Human", "Player"]]
 wall_min_slide_angle = 3.14159
 script = SubResource("GDScript_5h67k")
@@ -317,6 +338,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0340518, 0.764707, 0)
 [node name="Camera3D" type="Camera3D" parent="head"]
 current = true
 fov = 90.0
+
+[node name="pause_menu" parent="head/Camera3D" instance=ExtResource("2_s4sly")]
+visible = false
+
+[node name="death_menu" parent="head/Camera3D" instance=ExtResource("3_0ijgc")]
+visible = false
 
 [node name="HUD" type="CanvasLayer" parent="head/Camera3D"]
 
@@ -364,7 +391,10 @@ offset_right = 30.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_6jvax")
 text = "interact"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="pickup_test" type="Label" parent="head/Camera3D/HUD"]
 visible = false
@@ -379,35 +409,10 @@ offset_right = 30.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_6jvax")
 text = "interact"
-
-[node name="left_test" type="Label" parent="head/Camera3D/HUD"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -206.0
-offset_top = -22.0
-offset_right = -140.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "left item"
-
-[node name="right_test" type="Label" parent="head/Camera3D/HUD"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 132.0
-offset_top = -24.0
-offset_right = 198.0
-offset_bottom = -1.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "right item"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="dialogue" type="Label" parent="head/Camera3D/HUD"]
 process_mode = 3
@@ -420,6 +425,7 @@ offset_top = -246.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_6jvax")
 theme_override_font_sizes/font_size = 45
 theme_override_styles/normal = SubResource("StyleBoxFlat_s4sly")
 text = "dialogue"
@@ -436,12 +442,15 @@ offset_top = 25.0
 offset_right = 427.0
 offset_bottom = 211.0
 grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_6jvax")
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_0ijgc")
+text = "YOU VALUE NOTHING"
+label_settings = SubResource("LabelSettings_6jvax")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="temp_crosshair" type="Label" parent="head/Camera3D/HUD"]
+[node name="crosshair" type="Label" parent="head/Camera3D/HUD"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -453,6 +462,7 @@ offset_right = 70.0
 offset_bottom = 19.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_6jvax")
 theme_override_font_sizes/font_size = 50
 text = "."
 horizontal_alignment = 1

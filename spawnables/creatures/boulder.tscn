@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c03rvdebaskt1"]
+[gd_scene load_steps=7 format=3 uid="uid://c03rvdebaskt1"]
 
 [ext_resource type="Script" uid="uid://bv8olty7y14pr" path="res://spawnables/creatures/boulder.gd" id="1_kdopu"]
 
@@ -13,6 +13,10 @@ height = 3.25
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dlqay"]
 radius = 8.03108
 height = 21.8252
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_d1wpg"]
+radius = 4.76141
+height = 14.2507
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8hkdw"]
 radius = 1.3836
@@ -33,6 +37,11 @@ shape = SubResource("CapsuleShape3D_kdopu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="attack_range"]
 shape = SubResource("CapsuleShape3D_dlqay")
+
+[node name="aura_range" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="aura_range"]
+shape = SubResource("CapsuleShape3D_d1wpg")
 
 [node name="attack_area" type="Area3D" parent="."]
 

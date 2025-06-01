@@ -1,7 +1,6 @@
 extends Node
 
 @onready var player = get_tree().get_first_node_in_group("Player")
-@onready var Pvalue = player.data.value
 
 var values = {
 	"killing": [3, false],
@@ -25,6 +24,7 @@ func add_value(name):
 func _process(delta: float) -> void:
 	player = get_tree().get_first_node_in_group("Player")
 	if player != null:
+		var Pvalue = player.data.value
 		Pvalue = player.data.value
 		if Pvalue.killing >= values.killing[0] and not values.killing[1]\
 		and player.data.can_get_value:

@@ -3,6 +3,8 @@ extends CSGBox3D
 @onready var player = get_tree().get_first_node_in_group("Player")
 @onready var data = player.data
 
+@export var interact_type = "Eat"
+
 @export var dialogue = [
 	"GURT: YO",
 	"you wouldn't get it YO",

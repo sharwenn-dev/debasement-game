@@ -1,0 +1,106 @@
+[gd_scene load_steps=8 format=3 uid="uid://buei2p7n260rx"]
+
+[ext_resource type="Script" uid="uid://0ssvpjhldvvy" path="res://menus/pause_menu.gd" id="1_p1qj3"]
+[ext_resource type="FontFile" uid="uid://cggb81otl6rku" path="res://menus/redaction-70-latin-400-normal.ttf" id="1_s0u37"]
+
+[sub_resource type="Theme" id="Theme_p1qj3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0wv6w"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.154876, 0.154876, 0.154876, 1)
+shadow_color = Color(0.458405, 0.458405, 0.458405, 0.6)
+shadow_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_qlf07"]
+font_size = 100
+shadow_size = 5
+shadow_color = Color(0.259294, 0.259294, 0.259294, 0.894118)
+shadow_offset = Vector2(10, 10)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ybqm1"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+shadow_color = Color(0.960351, 0.960351, 0.960351, 0.6)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mtdpf"]
+bg_color = Color(0, 0, 0, 1)
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+shadow_color = Color(1, 1, 1, 0.933333)
+
+[node name="pause_menu" type="CanvasLayer"]
+script = ExtResource("1_p1qj3")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="debasement" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -371.0
+offset_top = 77.0
+offset_right = 372.0
+offset_bottom = 314.0
+grow_horizontal = 2
+theme = SubResource("Theme_p1qj3")
+theme_override_fonts/font = ExtResource("1_s0u37")
+theme_override_styles/normal = SubResource("StyleBoxFlat_0wv6w")
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_qlf07")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="start" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -133.0
+offset_top = -61.0
+offset_right = 133.0
+offset_bottom = 61.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_s0u37")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/hover = SubResource("StyleBoxFlat_ybqm1")
+theme_override_styles/normal = SubResource("StyleBoxFlat_mtdpf")
+text = "RESUME"
+
+[node name="exit" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -133.0
+offset_top = 77.0
+offset_right = 133.0
+offset_bottom = 199.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_s0u37")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/hover = SubResource("StyleBoxFlat_ybqm1")
+theme_override_styles/normal = SubResource("StyleBoxFlat_mtdpf")
+text = "GIVE UP"
+
+[connection signal="pressed" from="Panel/start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Panel/exit" to="." method="_on_exit_pressed"]

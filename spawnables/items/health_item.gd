@@ -1,5 +1,7 @@
 extends BaseItem
 
+@export var item_name = "Flesh Bandage"
+
 @warning_ignore("unused_parameter")
 func _process(delta: float) -> void:
 	check_origin()

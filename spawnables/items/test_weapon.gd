@@ -4,6 +4,8 @@ extends BaseItem
 
 var can_be_used = true
 
+@export var item_name = "Metal Pipe"
+
 @warning_ignore("unused_parameter")
 func _process(delta: float) -> void:
 	check_origin()
