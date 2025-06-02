@@ -1,10 +1,43 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmdvs83juywbx"]
+[gd_scene load_steps=15 format=3 uid="uid://cmdvs83juywbx"]
 
 [ext_resource type="Script" uid="uid://cpptikjekpf11" path="res://spawnables/creatures/skitter.gd" id="1_decy3"]
+[ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="2_38gw6"]
+[ext_resource type="Texture2D" uid="uid://dov3akhtb1je7" path="res://assets/textures/Bark014_1K-JPG/Bark014_1K-JPG_Color.jpg" id="2_th7rg"]
+[ext_resource type="Texture2D" uid="uid://dft6apuixkhv" path="res://assets/textures/random/eyeball.jpg" id="3_ka2sv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2wou"]
+albedo_texture = ExtResource("2_38gw6")
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_evdrq"]
+material = SubResource("StandardMaterial3D_h2wou")
 radius = 0.4
 height = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ka2sv"]
+albedo_texture = ExtResource("2_th7rg")
+albedo_texture_force_srgb = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_decy3"]
+material = SubResource("StandardMaterial3D_ka2sv")
+radius = 0.6
+height = 0.488
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38gw6"]
+albedo_texture = ExtResource("3_ka2sv")
+albedo_texture_force_srgb = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_th7rg"]
+material = SubResource("StandardMaterial3D_38gw6")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lsg2f"]
+albedo_texture = ExtResource("2_38gw6")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_decy3"]
+material = SubResource("StandardMaterial3D_lsg2f")
+radius = 0.1
+height = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_decy3"]
 radius = 0.4
@@ -14,15 +47,27 @@ height = 0.9
 radius = 8.03108
 height = 21.8252
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ka2sv"]
-radius = 0.582178
-height = 2.1689
-
 [node name="skitter" type="CharacterBody3D" groups=["Hittable", "Passive", "Skitter"]]
 script = ExtResource("1_decy3")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_evdrq")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000442266, 0.365387, 0.00656861)
+mesh = SubResource("SphereMesh_decy3")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.884719, -0.466124, 0, 0.466124, -0.884719, -0.19351, 0.428364, 0.485084)
+mesh = SubResource("SphereMesh_th7rg")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.991395, 0.130907, 0, -0.130907, -0.991395, 0.228615, 0.285166, 0.503511)
+mesh = SubResource("SphereMesh_th7rg")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.45525, 0.890364, 0, -0.890364, 0.45525, 0.00598016, -0.0418952, -0.540085)
+mesh = SubResource("CapsuleMesh_decy3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_decy3")
@@ -33,8 +78,3 @@ shape = SubResource("CapsuleShape3D_decy3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="detection_range"]
 shape = SubResource("CapsuleShape3D_th7rg")
-
-[node name="attack_area" type="Area3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="attack_area"]
-shape = SubResource("CapsuleShape3D_ka2sv")

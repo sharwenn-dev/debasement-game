@@ -1,13 +1,57 @@
-[gd_scene load_steps=3 format=3 uid="uid://dftbwujv4puip"]
+[gd_scene load_steps=11 format=3 uid="uid://dftbwujv4puip"]
 
-[ext_resource type="Script" uid="uid://bjdtus0s0tbc0" path="res://items/health_item.gd" id="1_y0p6c"]
+[ext_resource type="Texture2D" uid="uid://dov3akhtb1je7" path="res://assets/textures/Bark014_1K-JPG/Bark014_1K-JPG_Color.jpg" id="1_anmau"]
+[ext_resource type="Script" uid="uid://bjdtus0s0tbc0" path="res://spawnables/items/health_item.gd" id="1_y0p6c"]
+[ext_resource type="Texture2D" uid="uid://b4rpmvmg230f3" path="res://assets/textures/random/seattle-trash-crisis.jpg" id="3_irktt"]
+[ext_resource type="Texture2D" uid="uid://cjrkg1dc7pcmh" path="res://assets/textures/Grass001_1K-JPG/Grass001_1K-JPG_Color.jpg" id="4_ebvfi"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0k58a"]
-albedo_color = Color(0.165063, 0.667333, 0.18057, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vvmwc"]
+albedo_texture = ExtResource("1_anmau")
 
-[node name="health_item" type="CSGBox3D" groups=["Item"]]
+[sub_resource type="SphereMesh" id="SphereMesh_hs1gs"]
+material = SubResource("StandardMaterial3D_vvmwc")
+radius = 0.2
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oph0l"]
+albedo_texture = ExtResource("3_irktt")
+albedo_texture_force_srgb = true
+
+[sub_resource type="TorusMesh" id="TorusMesh_svdno"]
+material = SubResource("StandardMaterial3D_oph0l")
+inner_radius = 0.05
+outer_radius = 0.1
+rings = 10
+ring_segments = 10
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6iqoh"]
+albedo_texture = ExtResource("4_ebvfi")
+albedo_texture_force_srgb = true
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_t65j7"]
+material = SubResource("StandardMaterial3D_6iqoh")
+radius = 0.05
+section_length = 0.025
+
+[node name="CSGMesh3D" type="CSGMesh3D" groups=["Item"]]
 use_collision = true
 collision_layer = 2
-size = Vector3(0.1, 0.1, 0.1)
-material = SubResource("StandardMaterial3D_0k58a")
+mesh = SubResource("SphereMesh_hs1gs")
 script = ExtResource("1_y0p6c")
+item_name = "Stomach Cleanser"
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+transform = Transform3D(0.999838, 0.0180108, 0, -0.0180108, 0.999838, 0, 0, 0, 1, 0.000485495, -0.0877182, 0)
+mesh = SubResource("TorusMesh_svdno")
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="."]
+transform = Transform3D(0.670056, -0.297544, 0.680069, 0.405844, 0.913943, 0, -0.621544, 0.276001, 0.733149, -0.107882, 0.101665, 0.0672731)
+mesh = SubResource("TubeTrailMesh_t65j7")
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="."]
+transform = Transform3D(-0.921997, -0.107396, 0.372006, -0.163454, 0.978916, -0.122504, -0.351006, -0.173755, -0.920111, 0.00888359, 0.101665, -0.130472)
+mesh = SubResource("TubeTrailMesh_t65j7")
+
+[node name="CSGMesh3D4" type="CSGMesh3D" parent="."]
+transform = Transform3D(-0.970458, 0.000114322, 0.241272, 0.0258116, 0.99431, 0.10335, -0.239888, 0.106524, -0.964939, 0.0901528, 0.101665, 0.0178884)
+mesh = SubResource("TubeTrailMesh_t65j7")

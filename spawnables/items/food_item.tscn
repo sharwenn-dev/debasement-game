@@ -1,13 +1,34 @@
-[gd_scene load_steps=3 format=3 uid="uid://baqr51kg5oeuh"]
+[gd_scene load_steps=8 format=3 uid="uid://baqr51kg5oeuh"]
 
-[ext_resource type="Script" uid="uid://cyhd6s7f5b87p" path="res://items/food_item.gd" id="1_0wi1s"]
+[ext_resource type="Script" uid="uid://cyhd6s7f5b87p" path="res://spawnables/items/food_item.gd" id="1_0wi1s"]
+[ext_resource type="Texture2D" uid="uid://dhl7pupditoh5" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_Color.jpg" id="1_n06qw"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="3_gxwxe"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0l3m6"]
-albedo_color = Color(0.51371, 0.266347, 0.0132453, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_umsrr"]
+albedo_texture = ExtResource("1_n06qw")
 
-[node name="food_item" type="CSGBox3D" groups=["Item"]]
+[sub_resource type="SphereMesh" id="SphereMesh_5oxr7"]
+material = SubResource("StandardMaterial3D_umsrr")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_16xca"]
+albedo_texture = ExtResource("3_gxwxe")
+
+[sub_resource type="BoxMesh" id="BoxMesh_bvnw5"]
+material = SubResource("StandardMaterial3D_16xca")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="CSGMesh3D" type="CSGMesh3D" groups=["Item"]]
 use_collision = true
 collision_layer = 2
-size = Vector3(0.1, 0.1, 0.1)
-material = SubResource("StandardMaterial3D_0l3m6")
+mesh = SubResource("SphereMesh_5oxr7")
 script = ExtResource("1_0wi1s")
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0578836, 0.0165768, -0.039528)
+mesh = SubResource("BoxMesh_bvnw5")
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0325702, 0.0457288, 0.0537718)
+mesh = SubResource("BoxMesh_bvnw5")

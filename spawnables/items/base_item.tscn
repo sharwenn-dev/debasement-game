@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cytnfro4xomb5"]
+[gd_scene load_steps=3 format=3 uid="uid://cytnfro4xomb5"]
 
-[ext_resource type="Script" uid="uid://ba1f5mhb3v0pm" path="res://items/base_item.gd" id="1_m53hc"]
+[ext_resource type="Script" uid="uid://ba1f5mhb3v0pm" path="res://spawnables/items/base_item.gd" id="1_m53hc"]
 
-[node name="base_item" type="CSGBox3D"]
+[sub_resource type="SphereMesh" id="SphereMesh_gtqff"]
+
+[node name="CSGMesh3D" type="CSGMesh3D"]
+mesh = SubResource("SphereMesh_gtqff")
 script = ExtResource("1_m53hc")

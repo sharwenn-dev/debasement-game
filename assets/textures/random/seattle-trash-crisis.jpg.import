@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfxmfiu2urtau"
-path.s3tc="res://.godot/imported/Tiles086_1K-JPG_AmbientOcclusion.jpg-5d98011755ca82bd49f042d6965d512f.s3tc.ctex"
+uid="uid://b4rpmvmg230f3"
+path.s3tc="res://.godot/imported/seattle-trash-crisis.jpg-141d885a6fdd8c159337055d17c642b9.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/textures/Tiles086_1K-JPG/Tiles086_1K-JPG_AmbientOcclusion.jpg"
-dest_files=["res://.godot/imported/Tiles086_1K-JPG_AmbientOcclusion.jpg-5d98011755ca82bd49f042d6965d512f.s3tc.ctex"]
+source_file="res://assets/textures/random/seattle-trash-crisis.jpg"
+dest_files=["res://.godot/imported/seattle-trash-crisis.jpg-141d885a6fdd8c159337055d17c642b9.s3tc.ctex"]
 
 [params]
 

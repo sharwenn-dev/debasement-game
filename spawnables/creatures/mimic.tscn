@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://digkepe5pnnpg"]
+[gd_scene load_steps=21 format=3 uid="uid://digkepe5pnnpg"]
 
 [ext_resource type="Script" uid="uid://cg1ixdh7s650r" path="res://spawnables/creatures/mimic.gd" id="1_60fkv"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_5yvhj"]
+[ext_resource type="Texture2D" uid="uid://cyk7sydrmxqpj" path="res://assets/textures/Rock026_1K-JPG/Rock026_1K-JPG_Color.jpg" id="2_2g4m5"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="3_ppg21"]
+[ext_resource type="Texture2D" uid="uid://bav1uy0vr10ok" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_Displacement.jpg" id="4_nkpmt"]
+[ext_resource type="Texture2D" uid="uid://b4rpmvmg230f3" path="res://assets/textures/random/seattle-trash-crisis.jpg" id="5_hnvmu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_60fkv"]
 
@@ -14,13 +16,58 @@ height = 21.8252
 radius = 0.582178
 height = 2.1689
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mwyg"]
+albedo_texture = ExtResource("2_2g4m5")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cpqxc"]
+material = SubResource("StandardMaterial3D_4mwyg")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1lglo"]
+albedo_texture = ExtResource("3_ppg21")
+
+[sub_resource type="BoxMesh" id="BoxMesh_ym2ol"]
+material = SubResource("StandardMaterial3D_1lglo")
+size = Vector3(0.75, 0.75, 0.75)
+
+[sub_resource type="PrismMesh" id="PrismMesh_cblqv"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qq2qi"]
+albedo_color = Color(0.901961, 0.447059, 0.447059, 1)
+albedo_texture = ExtResource("4_nkpmt")
+albedo_texture_force_srgb = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_dt3o4"]
+material = SubResource("StandardMaterial3D_qq2qi")
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yoim2"]
+albedo_color = Color(0.505344, 0.505344, 0.505344, 1)
+albedo_texture = ExtResource("5_hnvmu")
+albedo_texture_force_srgb = true
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_fwigk"]
+material = SubResource("StandardMaterial3D_yoim2")
+radius = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8a2o6"]
+albedo_texture = ExtResource("3_ppg21")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1vchk"]
+material = SubResource("StandardMaterial3D_8a2o6")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 1.4
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2ebse"]
+radius = 0.517652
+height = 2.07274
+
 [node name="mimic" type="CharacterBody3D" groups=["Hittable", "Hostile", "Mimic"]]
 script = ExtResource("1_60fkv")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_5yvhj")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.249549, 0)
 shape = SubResource("CapsuleShape3D_60fkv")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
@@ -33,4 +80,37 @@ shape = SubResource("CapsuleShape3D_mdmox")
 [node name="attack_area" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="attack_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.188635, 0)
 shape = SubResource("CapsuleShape3D_ox1ko")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.261884, 0)
+mesh = SubResource("CapsuleMesh_cpqxc")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08798, 0.132873)
+mesh = SubResource("BoxMesh_ym2ol")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.296241, 0.955113, 0, -0.955113, 0.296241, 0, 1.10421, 0.452909)
+mesh = SubResource("PrismMesh_cblqv")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.893285, 0.394919, 0.214665, 0, -0.477573, 0.878592, 0.44949, -0.784833, -0.426609, 0.493752, 0.940615, 0.212856)
+mesh = SubResource("BoxMesh_dt3o4")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.693251, -0.720696, 0, 0.720696, 0.693251, 0, 0, 0, 1, 0, 0.217826, 0.346089)
+mesh = SubResource("TubeTrailMesh_fwigk")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.963719, -0.266919, 0, 0.266919, 0.963719, 0, 0, 0, 1, 0.545585, 0.407096, -0.0203694)
+mesh = SubResource("CylinderMesh_1vchk")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.96363, 0.267238, 0, -0.267238, 0.96363, 0, 0, 0, 1, -0.546, 0.0738805, -0.02)
+mesh = SubResource("CylinderMesh_1vchk")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00091821, 0.290228, 0)
+shape = SubResource("CapsuleShape3D_2ebse")

@@ -1,10 +1,41 @@
-[gd_scene load_steps=2 format=3 uid="uid://djgouormmp0rs"]
+[gd_scene load_steps=7 format=3 uid="uid://djgouormmp0rs"]
 
-[ext_resource type="Script" uid="uid://vqwar0qdjkwk" path="res://items/test_weapon.gd" id="1_p266q"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="1_hm370"]
+[ext_resource type="Script" uid="uid://vqwar0qdjkwk" path="res://spawnables/items/test_weapon.gd" id="1_p266q"]
 
-[node name="test_weapon" type="CSGBox3D" groups=["Item"]]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.503021, 0)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5vn3"]
+albedo_color = Color(0.266575, 0.266575, 0.266575, 1)
+albedo_texture = ExtResource("1_hm370")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2lytn"]
+material = SubResource("StandardMaterial3D_b5vn3")
+top_radius = 0.1
+bottom_radius = 0.09
+height = 1.0
+radial_segments = 10
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yue87"]
+albedo_color = Color(0.450648, 0.450648, 0.450648, 1)
+albedo_texture = ExtResource("1_hm370")
+albedo_texture_force_srgb = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f4mui"]
+albedo_color = Color(0.147672, 0.147672, 0.147672, 1)
+albedo_texture = ExtResource("1_hm370")
+
+[node name="CSGMesh3D" type="CSGMesh3D" groups=["Item"]]
 use_collision = true
 collision_layer = 2
-size = Vector3(0.1, 0.1, 0.8)
+mesh = SubResource("CylinderMesh_2lytn")
 script = ExtResource("1_p266q")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.470719, 0)
+size = Vector3(0.2, 0.2, 0.2)
+material = SubResource("StandardMaterial3D_yue87")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0272064, 0.99963, 0, -0.99963, 0.0272064, 0, 0.471516, 0.197375)
+radius = 0.09
+height = 0.25
+material = SubResource("StandardMaterial3D_f4mui")

@@ -1,10 +1,66 @@
-[gd_scene load_steps=7 format=3 uid="uid://c03rvdebaskt1"]
+[gd_scene load_steps=24 format=3 uid="uid://c03rvdebaskt1"]
 
 [ext_resource type="Script" uid="uid://bv8olty7y14pr" path="res://spawnables/creatures/boulder.gd" id="1_kdopu"]
+[ext_resource type="Texture2D" uid="uid://dhl7pupditoh5" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_Color.jpg" id="2_24ohb"]
+[ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="3_ulh8t"]
+[ext_resource type="Texture2D" uid="uid://blx6fd86ydoj8" path="res://assets/textures/Tiles086_1K-JPG/Tiles086_1K-JPG_Color.jpg" id="4_6e3xx"]
+[ext_resource type="Texture2D" uid="uid://b4rpmvmg230f3" path="res://assets/textures/random/seattle-trash-crisis.jpg" id="5_uym0c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jw2an"]
+albedo_color = Color(0.381703, 0.381703, 0.381703, 1)
+albedo_texture = ExtResource("2_24ohb")
+albedo_texture_force_srgb = true
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_p7xav"]
+material = SubResource("StandardMaterial3D_jw2an")
 radius = 1.25
 height = 3.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l1gd1"]
+albedo_texture = ExtResource("3_ulh8t")
+
+[sub_resource type="SphereMesh" id="SphereMesh_kdopu"]
+material = SubResource("StandardMaterial3D_l1gd1")
+radius = 1.0
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_svaxp"]
+albedo_texture = ExtResource("4_6e3xx")
+
+[sub_resource type="SphereMesh" id="SphereMesh_dlqay"]
+lightmap_size_hint = Vector2i(18, 9)
+material = SubResource("StandardMaterial3D_svaxp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5n1gd"]
+albedo_texture = ExtResource("4_6e3xx")
+
+[sub_resource type="SphereMesh" id="SphereMesh_8hkdw"]
+material = SubResource("StandardMaterial3D_5n1gd")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1tl1v"]
+albedo_texture = ExtResource("4_6e3xx")
+
+[sub_resource type="SphereMesh" id="SphereMesh_d1wpg"]
+material = SubResource("StandardMaterial3D_1tl1v")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_murly"]
+albedo_color = Color(0.695503, 0.695503, 0.695503, 1)
+albedo_texture = ExtResource("5_uym0c")
+albedo_texture_force_srgb = true
+metallic = 1.0
+metallic_specular = 0.62
+emission_enabled = true
+
+[sub_resource type="TorusMesh" id="TorusMesh_kdopu"]
+material = SubResource("StandardMaterial3D_murly")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fq8jm"]
+albedo_texture = ExtResource("4_6e3xx")
+
+[sub_resource type="SphereMesh" id="SphereMesh_24ohb"]
+material = SubResource("StandardMaterial3D_fq8jm")
+radius = 0.25
+height = 0.5
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kdopu"]
 radius = 1.25
@@ -27,6 +83,30 @@ script = ExtResource("1_kdopu")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_p7xav")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.970245, 0.583905)
+mesh = SubResource("SphereMesh_kdopu")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.874918, 1.27557)
+mesh = SubResource("SphereMesh_dlqay")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.832134, -0.436296, 0.805176)
+mesh = SubResource("SphereMesh_8hkdw")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.425917, -0.436296, -0.964558)
+mesh = SubResource("SphereMesh_d1wpg")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.728586, 0.684954, 0, -0.684954, 0.728586, 0.111664, 1.07306, -0.790594)
+mesh = SubResource("TorusMesh_kdopu")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.644171, 0.00756532, 1.05898)
+mesh = SubResource("SphereMesh_24ohb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_kdopu")

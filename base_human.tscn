@@ -1,8 +1,53 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgmgqdouxebll"]
+[gd_scene load_steps=19 format=3 uid="uid://bgmgqdouxebll"]
 
 [ext_resource type="Script" uid="uid://komj7nyv06oh" path="res://base_human.gd" id="1_4ucnw"]
+[ext_resource type="Texture2D" uid="uid://cyk7sydrmxqpj" path="res://assets/textures/Rock026_1K-JPG/Rock026_1K-JPG_Color.jpg" id="2_j2jl7"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="3_0m1oa"]
+[ext_resource type="Texture2D" uid="uid://bav1uy0vr10ok" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_Displacement.jpg" id="4_rvmti"]
+[ext_resource type="Texture2D" uid="uid://b4rpmvmg230f3" path="res://assets/textures/random/seattle-trash-crisis.jpg" id="5_t3eq2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j2jl7"]
+albedo_texture = ExtResource("2_j2jl7")
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_34ffg"]
+material = SubResource("StandardMaterial3D_j2jl7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0m1oa"]
+albedo_texture = ExtResource("3_0m1oa")
+
+[sub_resource type="BoxMesh" id="BoxMesh_4ucnw"]
+material = SubResource("StandardMaterial3D_0m1oa")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="PrismMesh" id="PrismMesh_ks8t7"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rvmti"]
+albedo_color = Color(0.901961, 0.447059, 0.447059, 1)
+albedo_texture = ExtResource("4_rvmti")
+albedo_texture_force_srgb = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_oh2fm"]
+material = SubResource("StandardMaterial3D_rvmti")
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t3eq2"]
+albedo_color = Color(0.505344, 0.505344, 0.505344, 1)
+albedo_texture = ExtResource("5_t3eq2")
+albedo_texture_force_srgb = true
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_r5x48"]
+material = SubResource("StandardMaterial3D_t3eq2")
+radius = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mwyg"]
+albedo_texture = ExtResource("3_0m1oa")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_fguhp"]
+material = SubResource("StandardMaterial3D_4mwyg")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4ucnw"]
 radius = 0.517652
@@ -18,6 +63,30 @@ script = ExtResource("1_4ucnw")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.261884, 0)
 mesh = SubResource("CapsuleMesh_34ffg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08798, 0.295332)
+mesh = SubResource("BoxMesh_4ucnw")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.296241, 0.955113, 0, -0.955113, 0.296241, 0, 1.10421, 0.494131)
+mesh = SubResource("PrismMesh_ks8t7")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.893285, 0.394919, 0.214665, 0, -0.477573, 0.878592, 0.44949, -0.784833, -0.426609, 0.292719, 0.249214, 0.374771)
+mesh = SubResource("BoxMesh_oh2fm")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.232851, -0.596005)
+mesh = SubResource("TubeTrailMesh_r5x48")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.963719, -0.266919, 0, 0.266919, 0.963719, 0, 0, 0, 1, 0.545585, 0.407096, -0.0203694)
+mesh = SubResource("CylinderMesh_fguhp")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.96363, 0.267238, 0, -0.267238, 0.96363, 0, 0, 0, 1, -0.546, 0.0738805, -0.02)
+mesh = SubResource("CylinderMesh_fguhp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00091821, 0.290228, 0)
