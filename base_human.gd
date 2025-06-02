@@ -2,6 +2,12 @@ extends CharacterBody3D
 
 @onready var player = get_tree().get_first_node_in_group("Player")
 @onready var dialogue_range = $dialogue_range
+
+@onready var dialogue1 = preload("res://assets/sound/sfx/dialogue1.wav")
+@onready var dialogue2 = preload("res://assets/sound/sfx/dialogue2.wav")
+@onready var dialogue3 = preload("res://assets/sound/sfx/dialogue3.wav")
+@onready var dialogue4 = preload("res://assets/sound/sfx/dialogue4.wav")
+
 var in_dialogue_range = false
 var infinite_range = false
 var can_be_hit = true

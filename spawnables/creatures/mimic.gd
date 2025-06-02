@@ -3,7 +3,10 @@ extends CharacterBody3D
 @onready var atk_area = $attack_area
 @onready var nav = $NavigationAgent3D
 @onready var attack_range = $attack_range
+@onready var aud = $AudioStreamPlayer3D
 @onready var player = get_tree().get_first_node_in_group("Player")
+
+@onready var spotted = preload("res://assets/sound/sfx/mimic_spotted.wav")
 
 const GRAVITY_MULT = 8.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVITY_MULT
@@ -183,6 +186,8 @@ func set_wander_move():
 	nav.target_position = new_target
 
 func _emit_player_detected_signal_or_run_dialogue():
+	aud.stream = spotted
+	aud.play()
 	if not player.in_dialogue:
 		var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
 		if valid_lines.size() == 0:

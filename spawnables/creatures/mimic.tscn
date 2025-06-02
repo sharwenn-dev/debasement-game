@@ -66,6 +66,8 @@ height = 2.07274
 [node name="mimic" type="CharacterBody3D" groups=["Hittable", "Hostile", "Mimic"]]
 script = ExtResource("1_60fkv")
 
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.249549, 0)
 shape = SubResource("CapsuleShape3D_60fkv")

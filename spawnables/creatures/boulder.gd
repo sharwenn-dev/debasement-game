@@ -4,7 +4,11 @@ extends CharacterBody3D
 @onready var nav = $NavigationAgent3D
 @onready var attack_range = $attack_range
 @onready var aura_range = $aura_range
+@onready var aud1 = $AudioStreamPlayer3D
+@onready var aud2 = $AudioStreamPlayer3D2
 @onready var player = get_tree().get_first_node_in_group("Player")
+
+@onready var spotted = preload("res://assets/sound/sfx/weird_tone.wav")
 
 const GRAVITY_MULT = 8.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVITY_MULT
@@ -219,3 +223,8 @@ func _emit_player_detected_signal_or_run_dialogue():
 		var dialogue_sequence = [random_line, "NO DIALOGUE"]
 		player.do_dialogue(dialogue_sequence, 0, self)
 		print("boulder detected player: %s" % random_line)
+	aud1.stream = spotted
+	aud1.play()
+	await get_tree().create_timer(0.4).timeout
+	aud2.stream = spotted
+	aud2.play()

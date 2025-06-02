@@ -81,6 +81,10 @@ height = 3.83048
 [node name="boulder" type="CharacterBody3D" groups=["Boulder", "Hittable", "Hostile"]]
 script = ExtResource("1_kdopu")
 
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="."]
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_p7xav")
 

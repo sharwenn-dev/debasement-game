@@ -1,6 +1,7 @@
 extends Node
 
 @onready var player = get_tree().get_first_node_in_group("Player")
+@onready var value_sound = preload("res://assets/sound/sfx/value_gained.wav")
 
 var values = {
 	"killing": [3, false],
@@ -19,6 +20,7 @@ func add_value(name):
 	var value_scene = value_path.instantiate()
 	player.add_child(value_scene)
 	value_scene.initialize()
+	player.play_sound(value_sound, player.aud1)
 	return
 
 func _process(delta: float) -> void:
