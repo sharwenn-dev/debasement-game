@@ -21,6 +21,8 @@ var FOV_CHANGE = 0.5
 const BOB_FREQ = 2.4
 const BOB_AMP = 0.08
 var t_bob = 0.0
+var prev_bob_y = 0.0
+var footstep_ready = true
 
 var inertia = Vector3.ZERO
 var damage_lock = 0.0
@@ -39,6 +41,7 @@ var fastest_falling = 0.0
 @onready var death_menu = $head/Camera3D/death_menu
 @onready var aud1 = $aud_player1
 @onready var aud2 = $aud_player2
+@onready var aud3 = $aud_player3
 
 @onready var hit = interact_ray.get_collider()
 @onready var floor_hit = floor_ray.get_collider()
@@ -53,12 +56,14 @@ var fastest_falling = 0.0
 @onready var dialogue2 = preload(\"res://assets/sound/sfx/dialogue2.wav\")
 @onready var dialogue3 = preload(\"res://assets/sound/sfx/dialogue3.wav\")
 @onready var dialogue4 = preload(\"res://assets/sound/sfx/dialogue4.wav\")
+@onready var footstep = preload(\"res://assets/sound/sfx/footstep.wav\")
 
 var hunger_down_time = 5.0
 var time_since_hunger = 0.0
 var hunger_down_amount = 5
 var starve_time = 5.0
 var starve_timer = 0.0
+var has_played_starve_sound = false
 
 var can_interact = false
 var can_pickup = false
@@ -80,7 +85,7 @@ var dialogue_cooldown = false
 	\"max_health\": 50,
 	\"health\": 50,
 	\"max_hunger\": 100,
-	\"hunger\": 70,
+	\"hunger\": 20,
 	\"left\": null,
 	\"right\": null,
 	\"values\": [],
@@ -257,7 +262,16 @@ func _physics_process(delta: float) -> void:
 		starve_timer += delta
 		if starve_timer >= starve_time:
 			data.health -= 10
+			play_sound(damage, aud1)
 			starve_timer = 0.0
+	
+	if data.hunger <= 0:
+		if not has_played_starve_sound:
+			play_sound(starve, aud1)
+			has_played_starve_sound = true
+	else:
+		has_played_starve_sound = false
+
 	
 	$head/Camera3D/HUD.visible = not get_tree().paused
 	if Input.is_action_just_pressed(\"ui_cancel\"):
@@ -294,7 +308,18 @@ func _physics_process(delta: float) -> void:
 			pass
 	
 	t_bob += delta * velocity.length() * float(is_on_floor())
-	camera.transform.origin = headbob(t_bob)
+	
+	var bob_pos = headbob(t_bob)
+	camera.transform.origin = bob_pos
+	if is_on_floor():
+		if bob_pos.y < prev_bob_y and footstep_ready:
+			aud2.pitch_scale = randf_range(0.85, 1.15)
+			aud2.volume_db = -8.0  # Quieter volume
+			play_sound(footstep, aud2)
+			footstep_ready = false
+		elif bob_pos.y > prev_bob_y:
+			footstep_ready = true
+		prev_bob_y = bob_pos.y
 	
 	var velocity_clamped = clamp(velocity.length(), 0.5, SPEED*2.0)
 	var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
@@ -352,8 +377,11 @@ wall_min_slide_angle = 3.14159
 script = SubResource("GDScript_5h67k")
 
 [node name="aud_player1" type="AudioStreamPlayer" parent="."]
+max_polyphony = 10
 
 [node name="aud_player2" type="AudioStreamPlayer" parent="."]
+
+[node name="aud_player3" type="AudioStreamPlayer" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.261884, 0)

@@ -7,6 +7,7 @@ extends CharacterBody3D
 @onready var player = get_tree().get_first_node_in_group("Player")
 
 @onready var spotted = preload("res://assets/sound/sfx/mimic_spotted.wav")
+@onready var damage_sound = preload("res://assets/sound/sfx/creature_hurt.wav")
 
 const GRAVITY_MULT = 8.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVITY_MULT
@@ -93,6 +94,8 @@ func get_nearest_human():
 
 func take_damage(damage, type):
 	if can_be_hit:
+		aud.stream = damage_sound
+		aud.play()
 		data.health = clamp(data.health - damage, 0, data.max_health)
 		can_be_hit = false
 		await get_tree().create_timer(0.12).timeout
@@ -100,6 +103,7 @@ func take_damage(damage, type):
 
 func _physics_process(delta: float) -> void:
 	if data.health <= 0:
+		await aud.finished
 		queue_free()
 		return
 
@@ -117,15 +121,14 @@ func _physics_process(delta: float) -> void:
 		if target == null or not is_instance_valid(target):
 			detected_human = false
 			target = get_nearest_human()
-			#player_dialogue_triggered = false
-
+	
 	if target:
 		SPEED = RUNSPEED
 		nav.target_position = target.global_position + Vector3(randf_range(-1.5, 1.5), 0, randf_range(-1.5, 1.5))
-
+	
 		if nav.distance_to_target() < 0.5:
 			nav.target_position = global_position
-
+	
 		if atk_area.overlaps_body(target) and attack_timer <= 0:
 			if target.has_method("take_damage"):
 				target.take_damage(ATTACK, "tear")
@@ -134,27 +137,27 @@ func _physics_process(delta: float) -> void:
 			attack_timer = attack_cooldown
 	else:
 		handle_wandering(delta)
-
+	
 	if target:
 		lunge_timer -= delta
 		if lunge_timer <= 0:
 			velocity += (target.global_position - global_position).normalized() * 12.0
 			lunge_timer = lunge_cooldown + randf_range(0.3, 0.8)
-
+	
 	var dir = nav.get_next_path_position() - global_position
 	dir.y = 0
 	if dir.length() > 0.01:
 		var rot_angle = atan2(dir.x, dir.z)
 		rotation.y = lerp_angle(rotation.y, rot_angle, 6 * delta)
-
+	
 	var move_dir = dir.normalized()
 	velocity = velocity.lerp(move_dir * SPEED, ACCEL * delta)
-
+	
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
 		velocity.y = 0
-
+	
 	move_and_slide()
 
 func handle_wandering(delta: float):

@@ -1,0 +1,102 @@
+[gd_scene load_steps=10 format=3 uid="uid://cqubeufhpoj0x"]
+
+[ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_smt3u"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="2_il0tq"]
+[ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="2_x1iep"]
+[ext_resource type="PackedScene" uid="uid://byho64fnbpypi" path="res://poi.tscn" id="3_x1iep"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_il0tq"]
+vertices = PackedVector3Array(24.3276, 0.582765, -7.65185, 24.8276, 0.582765, -8.15185, 33.0776, 0.582765, -35.4019, -33.1724, 0.582765, -35.4019, 26.0776, 0.582765, -8.15185, 26.5776, 0.582765, -7.65185, 26.5776, 0.582765, -6.40185, 33.0776, 0.582765, 35.3481, -33.1724, 0.582765, 35.3481, 24.5776, 0.582765, -5.90185, 26.0776, 0.582765, -5.90185)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(4, 1, 2), PackedInt32Array(5, 4, 2), PackedInt32Array(5, 2, 6), PackedInt32Array(6, 2, 7), PackedInt32Array(7, 8, 9), PackedInt32Array(9, 8, 3), PackedInt32Array(10, 6, 7), PackedInt32Array(9, 10, 7), PackedInt32Array(3, 0, 9)]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gscbt"]
+sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_curve = 4.03631
+sky_energy_multiplier = 0.75
+sky_cover = ExtResource("1_smt3u")
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+ground_curve = 0.0585633
+sun_curve = 3.76601
+
+[sub_resource type="Sky" id="Sky_ivea3"]
+sky_material = SubResource("ProceduralSkyMaterial_gscbt")
+radiance_size = 6
+
+[sub_resource type="Environment" id="Environment_i0wba"]
+background_mode = 2
+sky = SubResource("Sky_ivea3")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ff24s"]
+albedo_color = Color(0.190762, 0.190762, 0.190762, 1)
+albedo_texture = ExtResource("2_il0tq")
+albedo_texture_force_srgb = true
+
+[node name="test_world2" type="Node3D"]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_il0tq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="NavigationRegion3D"]
+transform = Transform3D(-0.939693, 0.34202, 1.49502e-08, 0, -4.37114e-08, 1, 0.34202, 0.939693, 4.10753e-08, 0, 0, 0)
+light_energy = 11.343
+shadow_enabled = true
+shadow_bias = 1.0
+shadow_normal_bias = 0.35
+shadow_transmittance_bias = 16.0
+directional_shadow_pancake_size = 1024.0
+sky_mode = 2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="NavigationRegion3D"]
+environment = SubResource("Environment_i0wba")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00811934, 0)
+use_collision = true
+size = Vector3(67.3447, 0.350708, 71.8037)
+material = SubResource("StandardMaterial3D_ff24s")
+
+[node name="debase_player" parent="NavigationRegion3D" instance=ExtResource("2_x1iep")]
+transform = Transform3D(-0.0969923, 0, 0.995284, 0, 1, 0, -0.995284, 0, -0.0969923, 25.4077, 1.72425, -7.00642)
+
+[node name="poi" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.0908, 0.183473, 20.9333)
+
+[node name="poi2" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3957, 0.183472, -24.5314)
+
+[node name="poi3" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.518, 0.183472, 3.25695)
+
+[node name="poi4" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.09627, 0.183473, -11.4976)
+
+[node name="poi5" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5101, 0.183473, 15.0623)
+
+[node name="poi6" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.2913, 0.183474, -32.0737)
+
+[node name="poi7" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.7834, 0.183473, -28.5592)
+
+[node name="poi8" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5717, 0.183471, 11.4119)
+
+[node name="poi9" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.2567, 0.183471, 27.1397)
+
+[node name="poi10" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.92518, 0.183473, 19.7185)
+
+[node name="poi11" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.491, 0.183471, 33.0438)
+
+[node name="poi12" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.337, 0.183473, 23.0877)
+
+[node name="poi13" parent="NavigationRegion3D" instance=ExtResource("3_x1iep")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3372, 0.183475, -21.748)

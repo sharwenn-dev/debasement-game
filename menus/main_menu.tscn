@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://brkc4x00ndk36"]
+[gd_scene load_steps=12 format=3 uid="uid://brkc4x00ndk36"]
 
 [ext_resource type="FontFile" uid="uid://cggb81otl6rku" path="res://menus/redaction-70-latin-400-normal.ttf" id="1_8gy84"]
 [ext_resource type="Script" uid="uid://cy6s5368m4n1l" path="res://menus/main_menu.gd" id="1_ij7vn"]
+[ext_resource type="AudioStream" uid="uid://bnx3px1in6y02" path="res://assets/sound/music/debasement.mp3" id="3_yjgyn"]
 
 [sub_resource type="Theme" id="Theme_ij7vn"]
 
@@ -115,6 +116,25 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_yjgyn")
 theme_override_styles/normal = SubResource("StyleBoxFlat_8gy84")
 text = "START"
 
+[node name="start2" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -949.0
+offset_top = 408.0
+offset_right = -683.0
+offset_bottom = 530.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_8gy84")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/hover = SubResource("StyleBoxFlat_yjgyn")
+theme_override_styles/normal = SubResource("StyleBoxFlat_8gy84")
+text = "test world"
+
 [node name="exit" type="Button" parent="Panel"]
 layout_mode = 1
 anchors_preset = 8
@@ -134,5 +154,10 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_yjgyn")
 theme_override_styles/normal = SubResource("StyleBoxFlat_8gy84")
 text = "QUIT"
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_yjgyn")
+autoplay = true
+
 [connection signal="pressed" from="Panel/start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Panel/start2" to="." method="_on_start_2_pressed"]
 [connection signal="pressed" from="Panel/exit" to="." method="_on_exit_pressed"]

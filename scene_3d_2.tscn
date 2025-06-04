@@ -1,0 +1,91 @@
+[gd_scene load_steps=16 format=3 uid="uid://7oh13t47s2nr"]
+
+[ext_resource type="Script" uid="uid://dnt1wwesbivwb" path="res://addons/zylann.hterrain/hterrain.gd" id="1_e88tt"]
+[ext_resource type="Resource" path="res://assets/terrains/scene_3d_2/data.hterrain" id="2_pwwym"]
+[ext_resource type="Script" uid="uid://chbvqbju7x3rn" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="3_uo2py"]
+[ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="4_4a1kj"]
+[ext_resource type="Texture2D" uid="uid://dhl7pupditoh5" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_Color.jpg" id="4_82sub"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="5_riod8"]
+[ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="6_qhkl0"]
+[ext_resource type="Texture2D" uid="uid://dpy1x6dea5m4j" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_NormalGL.jpg" id="7_rifw7"]
+[ext_resource type="Texture2D" uid="uid://cr7omxvrlovn2" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_NormalGL.jpg" id="8_xhgvw"]
+[ext_resource type="Texture2D" uid="uid://cjm8uffdaauxd" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_NormalGL.jpg" id="9_gsnim"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5de8i"]
+sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_curve = 4.03631
+sky_energy_multiplier = 0.75
+sky_cover = ExtResource("6_qhkl0")
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+ground_curve = 0.0585633
+sun_curve = 3.76601
+
+[sub_resource type="Sky" id="Sky_gpdfc"]
+sky_material = SubResource("ProceduralSkyMaterial_5de8i")
+radiance_size = 6
+
+[sub_resource type="Environment" id="Environment_662na"]
+background_mode = 2
+sky = SubResource("Sky_gpdfc")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="Resource" id="Resource_pqfru"]
+script = ExtResource("3_uo2py")
+mode = 0
+textures = [[ExtResource("4_82sub"), ExtResource("5_riod8"), ExtResource("6_qhkl0")], [ExtResource("7_rifw7"), ExtResource("8_xhgvw"), ExtResource("9_gsnim")]]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4mtww"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+backlight_enabled = true
+backlight = Color(1, 1, 1, 1)
+
+[node name="scene_3d_2" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.939693, 0.34202, 1.49502e-08, 0, -4.37114e-08, 1, 0.34202, 0.939693, 4.10753e-08, 0, 0, 0)
+visibility_parent = NodePath("../CSGSphere3D")
+light_energy = 10.596
+light_indirect_energy = 0.0
+light_angular_distance = 7.28
+shadow_enabled = true
+shadow_bias = 1.0
+shadow_normal_bias = 0.35
+shadow_transmittance_bias = 16.0
+directional_shadow_pancake_size = 1024.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_662na")
+
+[node name="HTerrain" type="Node3D" parent="."]
+script = ExtResource("1_e88tt")
+centered = true
+_terrain_data = ExtResource("2_pwwym")
+chunk_size = 32
+collision_enabled = true
+collision_layer = 1
+collision_mask = 1
+shader_type = "Classic4Lite"
+custom_shader = null
+custom_globalmap_shader = null
+texture_set = SubResource("Resource_pqfru")
+render_layers = 1
+cast_shadow = 1
+shader_params/u_ground_uv_scale = 20
+shader_params/u_depth_blending = true
+shader_params/u_triplanar = null
+shader_params/u_tile_reduction = null
+
+[node name="player3d" parent="." instance=ExtResource("4_4a1kj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.604546, 1.12868, -0.766331)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -0.169, 4000, 0)
+visible = false
+radius = 100.0
+smooth_faces = false
+material = SubResource("StandardMaterial3D_4mtww")

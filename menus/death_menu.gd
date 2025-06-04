@@ -1,10 +1,13 @@
 extends CanvasLayer
 
 @onready var message_box = $Panel/message
+@onready var aud = $AudioStreamPlayer
 @onready var life = $Panel/life
 @onready var death = $Panel/death
 var chosen_message = null
 var activated = false
+
+@onready var death_sound = preload("res://assets/sound/sfx/death.wav")
 
 @export var death_messages = [
 	"You were enough. It was just your time.",
@@ -34,6 +37,8 @@ func _ready() -> void:
 func activate_death():
 	if not activated:
 		self.show()
+		aud.stream = death_sound
+		aud.play()
 		await get_tree().create_timer(randf_range(3.0, 6.0)).timeout
 		chosen_message = death_messages.pick_random()
 		message_box.text = chosen_message
@@ -43,7 +48,7 @@ func activate_death():
 
 func _on_life_pressed() -> void:
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://test_world.tscn")
+	get_tree().change_scene_to_file("res://test_world_2.tscn")
 
 func _on_death_pressed() -> void:
 	get_tree().paused = false

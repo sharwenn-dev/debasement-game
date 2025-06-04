@@ -1,0 +1,189 @@
+[gd_scene load_steps=22 format=3 uid="uid://bv607v1gjnhs4"]
+
+[ext_resource type="Texture2D" uid="uid://d32hfug6v67i7" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_Color.jpg" id="1_ecy4b"]
+[ext_resource type="Script" uid="uid://dnt1wwesbivwb" path="res://addons/zylann.hterrain/hterrain.gd" id="2_hxpuk"]
+[ext_resource type="Resource" uid="uid://csshkefwls20k" path="res://assets/maps/data.hterrain" id="3_ht32x"]
+[ext_resource type="Script" uid="uid://chbvqbju7x3rn" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="4_2os05"]
+[ext_resource type="Texture2D" uid="uid://dhl7pupditoh5" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_Color.jpg" id="5_s8eul"]
+[ext_resource type="Texture2D" uid="uid://d2qbmptg240m5" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_Color.jpg" id="6_1u524"]
+[ext_resource type="Texture2D" uid="uid://blx6fd86ydoj8" path="res://assets/textures/Tiles086_1K-JPG/Tiles086_1K-JPG_Color.jpg" id="7_0jypa"]
+[ext_resource type="Texture2D" uid="uid://dpy1x6dea5m4j" path="res://assets/textures/Ground068_1K-JPG/Ground068_1K-JPG_NormalGL.jpg" id="8_qmpq8"]
+[ext_resource type="Texture2D" uid="uid://cr7omxvrlovn2" path="res://assets/textures/Metal055C_1K-JPG/Metal055C_1K-JPG_NormalGL.jpg" id="9_3wcco"]
+[ext_resource type="Texture2D" uid="uid://cjm8uffdaauxd" path="res://assets/textures/Rock031_1K-JPG/Rock031_1K-JPG_NormalGL.jpg" id="10_xyhtk"]
+[ext_resource type="Texture2D" uid="uid://dex0gnobccwbe" path="res://assets/textures/Tiles086_1K-JPG/Tiles086_1K-JPG_NormalGL.jpg" id="11_qwndu"]
+[ext_resource type="Script" uid="uid://btfvx8hwm8ji5" path="res://addons/zylann.hterrain/hterrain_detail_layer.gd" id="12_487lm"]
+[ext_resource type="Texture2D" uid="uid://6jmdwj3vn6m0" path="res://addons/zylann.hterrain/tools/icons/icon_detail_layer_node.svg" id="13_f70lp"]
+[ext_resource type="PackedScene" uid="uid://cponqcw7k51d0" path="res://debase_player.tscn" id="14_0jypa"]
+[ext_resource type="PackedScene" uid="uid://byho64fnbpypi" path="res://poi.tscn" id="15_qmpq8"]
+[ext_resource type="PackedScene" uid="uid://digkepe5pnnpg" path="res://spawnables/creatures/mimic.tscn" id="16_qmpq8"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_pfy8r"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xl5tc"]
+sky_top_color = Color(0.0439255, 0.0619628, 0.0870453, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_curve = 4.03631
+sky_energy_multiplier = 0.75
+sky_cover = ExtResource("1_ecy4b")
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+ground_curve = 0.0585633
+sun_curve = 3.76601
+
+[sub_resource type="Sky" id="Sky_gpdfc"]
+sky_material = SubResource("ProceduralSkyMaterial_xl5tc")
+radiance_size = 6
+
+[sub_resource type="Environment" id="Environment_hxpuk"]
+background_mode = 2
+sky = SubResource("Sky_gpdfc")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="Resource" id="Resource_dt31o"]
+script = ExtResource("4_2os05")
+mode = 0
+textures = [[ExtResource("5_s8eul"), ExtResource("6_1u524"), ExtResource("1_ecy4b"), ExtResource("7_0jypa")], [ExtResource("8_qmpq8"), ExtResource("9_3wcco"), ExtResource("10_xyhtk"), ExtResource("11_qwndu")]]
+
+[node name="layer1_test" type="Node3D"]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_pfy8r")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="NavigationRegion3D"]
+transform = Transform3D(-0.939693, 0.34202, 1.49502e-08, 0, -4.37114e-08, 1, 0.34202, 0.939693, 4.10753e-08, 0, 0, 0)
+light_energy = 11.343
+shadow_enabled = true
+shadow_bias = 1.0
+shadow_normal_bias = 0.35
+shadow_transmittance_bias = 16.0
+directional_shadow_pancake_size = 1024.0
+sky_mode = 2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="NavigationRegion3D"]
+environment = SubResource("Environment_hxpuk")
+
+[node name="HTerrain" type="Node3D" parent="."]
+script = ExtResource("2_hxpuk")
+ambient_wind = 0.105
+centered = true
+_terrain_data = ExtResource("3_ht32x")
+chunk_size = 32
+collision_enabled = true
+collision_layer = 1
+collision_mask = 1
+shader_type = "Classic4Lite"
+custom_shader = null
+custom_globalmap_shader = null
+texture_set = SubResource("Resource_dt31o")
+render_layers = 1
+cast_shadow = 1
+shader_params/u_ground_uv_scale = 20
+shader_params/u_depth_blending = true
+shader_params/u_triplanar = null
+shader_params/u_tile_reduction = null
+metadata/_custom_type_script = "uid://dnt1wwesbivwb"
+
+[node name="HTerrainDetailLayer" type="Node3D" parent="HTerrain"]
+script = ExtResource("12_487lm")
+texture = ExtResource("6_1u524")
+density = 0.727
+shader_params/u_globalmap_tint_bottom = null
+shader_params/u_globalmap_tint_top = null
+shader_params/u_bottom_ao = null
+shader_params/u_instance_scale = null
+shader_params/u_roughness = null
+metadata/_editor_icon = ExtResource("13_f70lp")
+
+[node name="debase_player" parent="." instance=ExtResource("14_0jypa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120.706, 0.738116, 29.1696)
+
+[node name="poi" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3537, -2.38419e-07, -132.516)
+
+[node name="poi2" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.6238, 0, 105.066)
+
+[node name="poi3" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110.591, 0, -31.3491)
+
+[node name="poi4" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1142, 0, 138.697)
+
+[node name="poi5" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.9207, 0, -104.757)
+
+[node name="poi6" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.899, 5.96046e-08, 124.668)
+
+[node name="poi7" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.0836, 4.76837e-07, -238.689)
+
+[node name="poi8" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -228.11, 0, 21.7714)
+
+[node name="poi9" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -173.945, 0, 154.292)
+
+[node name="poi10" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -130.2, 9.53674e-07, -36.3245)
+
+[node name="poi11" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 219.354, 0, 5.97906)
+
+[node name="poi12" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 79.8482, 0, 172.221)
+
+[node name="poi13" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.6253, 0, 226.621)
+
+[node name="poi14" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -146.483, 0, -10.8638)
+
+[node name="poi15" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -111.23, 0, 61.655)
+
+[node name="poi16" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100.264, 2.38419e-07, 12.8902)
+
+[node name="poi17" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -136.284, 0, 54.9374)
+
+[node name="poi18" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.2381, -5.96046e-08, 80.0508)
+
+[node name="poi19" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.2717, 0, 2.56737)
+
+[node name="poi20" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.22234, 0, -84.2125)
+
+[node name="poi21" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.3409, 0, 181.078)
+
+[node name="poi22" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.1333, 0, 162.864)
+
+[node name="poi23" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.5784, 0, 101.169)
+
+[node name="poi24" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -94.1826, 0, -59.9429)
+
+[node name="poi25" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -126.768, 0, -16.1916)
+
+[node name="poi26" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -184.249, 4.76837e-07, 25.1323)
+
+[node name="poi27" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -143.115, 0, 77.4697)
+
+[node name="poi28" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -184.738, 0, 121.003)
+
+[node name="poi29" parent="." instance=ExtResource("15_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -224.727, -5.96046e-08, 97.8886)
+
+[node name="mimic" parent="." instance=ExtResource("16_qmpq8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -83.7972, 0.738116, 30.8836)

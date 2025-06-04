@@ -9,6 +9,7 @@ transparency = 1
 albedo_color = Color(0.87451, 0.054902, 0.0901961, 1)
 
 [node name="hit_box" type="Area3D"]
+visible = false
 script = ExtResource("1_hmo53")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

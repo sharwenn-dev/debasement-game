@@ -50,6 +50,9 @@ height = 21.8252
 [node name="skitter" type="CharacterBody3D" groups=["Hittable", "Passive", "Skitter"]]
 script = ExtResource("1_decy3")
 
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+max_polyphony = 3
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_evdrq")
 

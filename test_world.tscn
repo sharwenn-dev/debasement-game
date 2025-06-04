@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d2245jh7nwd32" path="res://interact_test.tscn" id="3_1lwx6"]
 [ext_resource type="PackedScene" uid="uid://baqr51kg5oeuh" path="res://spawnables/items/food_item.tscn" id="4_dsnr4"]
 [ext_resource type="PackedScene" uid="uid://dftbwujv4puip" path="res://spawnables/items/health_item.tscn" id="5_lf0gk"]
-[ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://base_human.tscn" id="6_cnaw2"]
+[ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://spawnables/creatures/base_human.tscn" id="6_cnaw2"]
 [ext_resource type="PackedScene" uid="uid://djgouormmp0rs" path="res://spawnables/items/test_weapon.tscn" id="7_kt6p6"]
 [ext_resource type="PackedScene" uid="uid://u3cp4vqlxx8b" path="res://spawnables/structures/test_structure.tscn" id="8_uu1iw"]
 [ext_resource type="PackedScene" uid="uid://byho64fnbpypi" path="res://poi.tscn" id="10_ud3vi"]
@@ -28,13 +28,13 @@ ground_horizon_color = Color(0, 0, 0, 1)
 ground_curve = 0.0585633
 sun_curve = 3.76601
 
-[sub_resource type="Sky" id="Sky_gpdfc"]
+[sub_resource type="Sky" id="Sky_ivea3"]
 sky_material = SubResource("ProceduralSkyMaterial_5de8i")
 radiance_size = 6
 
 [sub_resource type="Environment" id="Environment_662na"]
 background_mode = 2
-sky = SubResource("Sky_gpdfc")
+sky = SubResource("Sky_ivea3")
 tonemap_mode = 2
 glow_enabled = true
 

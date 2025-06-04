@@ -100,5 +100,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_vhfgj")
 theme_override_styles/normal = SubResource("StyleBoxFlat_dksjp")
 text = "GIVE UP"
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
 [connection signal="pressed" from="Panel/life" to="." method="_on_life_pressed"]
 [connection signal="pressed" from="Panel/death" to="." method="_on_death_pressed"]

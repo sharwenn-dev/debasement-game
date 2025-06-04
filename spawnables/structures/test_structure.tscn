@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://u3cp4vqlxx8b"]
 
-[ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://base_human.tscn" id="1_olst7"]
+[ext_resource type="PackedScene" uid="uid://bgmgqdouxebll" path="res://spawnables/creatures/base_human.tscn" id="1_olst7"]
 [ext_resource type="Script" uid="uid://y72i67kjeoeq" path="res://spawnables/structures/test_structure.gd" id="1_x0v4m"]
 
 [node name="test_structure" type="Node3D"]
@@ -8,7 +8,6 @@ script = ExtResource("1_x0v4m")
 
 [node name="base_human" parent="." instance=ExtResource("1_olst7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28599, 0)
-dialogue = ["look at me", "im better than you", "NO DIALOGUE"]
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.303086, 0)

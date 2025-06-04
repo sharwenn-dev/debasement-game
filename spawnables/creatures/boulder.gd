@@ -9,6 +9,7 @@ extends CharacterBody3D
 @onready var player = get_tree().get_first_node_in_group("Player")
 
 @onready var spotted = preload("res://assets/sound/sfx/weird_tone.wav")
+@onready var damage_sound = preload("res://assets/sound/sfx/creature_hurt.wav")
 
 const GRAVITY_MULT = 8.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVITY_MULT
@@ -66,7 +67,7 @@ var infinite_range = true
 
 var time_in_aura = 0.0
 const AURA_DURATION_TO_LAUNCH = 2.0
-const UPWARD_LAUNCH_VELOCITY = 20.0  # Adjust as needed
+const UPWARD_LAUNCH_VELOCITY = 20.0  
 
 func _ready():
 	nav.target_position = global_position
@@ -96,6 +97,8 @@ func get_nearest_human():
 
 func take_damage(damage, type):
 	if can_be_hit:
+		aud1.stream = damage_sound
+		aud1.play()
 		data.health = clamp(data.health - damage, 0, data.max_health)
 		can_be_hit = false
 		await get_tree().create_timer(0.12).timeout
@@ -103,14 +106,13 @@ func take_damage(damage, type):
 
 func _physics_process(delta: float) -> void:
 	if data.health <= 0:
+		await aud1.finished
 		queue_free()
 		return
-
+	
 	attack_timer = max(attack_timer - delta, 0)
-
-	var dir = Vector3.ZERO  # declare upfront
-
-	# never stop chasing first target
+	
+	var dir = Vector3.ZERO  
 	if not detected_human:
 		target = get_nearest_human()
 		if target:
@@ -126,31 +128,23 @@ func _physics_process(delta: float) -> void:
 
 	if target:
 		SPEED = RUNSPEED
-
-		# Set nav target to the exact player position (no random offset)
 		nav.target_position = target.global_position
-
-		# Calculate direction vector directly toward the target, ignoring nav path points
 		dir = (target.global_position - global_position)
 		dir.y = 0
-
-		# If very close, stop moving (to prevent jitter)
+		
 		if dir.length() < 0.5:
 			dir = Vector3.ZERO
-
-		# Attack logic
+		
 		if atk_area.overlaps_body(target) and attack_timer <= 0:
 			if target.has_method("take_damage"):
 				target.take_damage(ATTACK, "tear")
 			if "inertia" in target:
 				target.inertia = (target.global_position - global_position).normalized() * KNOCKBACK
 			attack_timer = attack_cooldown
-
-		# New: Launch the target upward if in aura_range long enough
+			
 		if aura_range.get_overlapping_bodies().has(target):
 			time_in_aura += delta
 			if time_in_aura >= AURA_DURATION_TO_LAUNCH:
-				# Apply upward velocity to the target
 				if target.has_method("add_velocity"):
 					target.add_velocity(Vector3.UP * UPWARD_LAUNCH_VELOCITY)
 				elif "velocity" in target:
@@ -158,27 +152,20 @@ func _physics_process(delta: float) -> void:
 				time_in_aura = 0.0
 		else:
 			time_in_aura = 0.0
-
+			
 	else:
-		# No target: wander normally
 		handle_wandering(delta)
-
-		# Use nav path for wandering movement
 		dir = nav.get_next_path_position() - global_position
 		dir.y = 0
 		if dir.length() < 0.01:
 			dir = Vector3.ZERO
 
-	# Rotate smoothly toward movement direction
 	if dir.length() > 0:
 		var rot_angle = atan2(dir.x, dir.z)
 		rotation.y = lerp_angle(rotation.y, rot_angle, 6 * delta)
-
-	# Move velocity smoothly toward target direction
 	var move_dir = dir.normalized()
 	velocity = velocity.lerp(move_dir * SPEED, ACCEL * delta)
-
-	# Gravity and vertical movement
+	
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:

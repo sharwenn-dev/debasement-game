@@ -2,7 +2,14 @@ extends CharacterBody3D
 
 @onready var nav = $NavigationAgent3D
 @onready var detection_range = $detection_range
+@onready var aud = $AudioStreamPlayer3D
 @onready var player = get_tree().get_first_node_in_group("Player")
+
+@onready var spotted = preload("res://assets/sound/sfx/skitter_spotted.wav")
+@onready var damage_sound = preload("res://assets/sound/sfx/creature_hurt.wav")
+
+@onready var item = preload("res://spawnables/items/food_item.tscn")
+var can_drop = true
 
 const GRAVITY_MULT = 8.0
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * GRAVITY_MULT
@@ -23,13 +30,12 @@ var player_dialogue_triggered = false
 enum WanderState { IDLE, MOVING }
 var wander_state = WanderState.IDLE
 var wander_timer = 0.0
-var idle_duration = 2.0   # shorter idle, skittish
-var move_duration = 1.5   # shorter moves, quick hops
+var idle_duration = 2.0   
+var move_duration = 1.5   
 
-# --- New fleeing hesitation variables ---
 var fleeing_hesitating = false
 var hesitation_time = 0.0
-var hesitation_duration = 1.0  # seconds to hesitate (full stop)
+var hesitation_duration = 1.0  
 
 @export var data = {
 	"max_health": 20,
@@ -85,6 +91,8 @@ func get_nearest_threat():
 
 func take_damage(damage, type):
 	if can_be_hit:
+		aud.stream = damage_sound
+		aud.play()
 		data.health = clamp(data.health - damage, 0, data.max_health)
 		can_be_hit = false
 		await get_tree().create_timer(0.12).timeout
@@ -92,10 +100,16 @@ func take_damage(damage, type):
 
 func _physics_process(delta: float) -> void:
 	if data.health <= 0:
+		var dropped_item = item.instantiate()
+		if can_drop:
+			get_tree().current_scene.add_child(dropped_item)
+			dropped_item.global_transform.origin = global_transform.origin
+			can_drop = false
+		await aud.finished
 		queue_free()
-		return
-
-	# Detect threats
+		
+	
+	
 	if not detected_threat:
 		target = get_nearest_threat()
 		if target:
@@ -104,67 +118,52 @@ func _physics_process(delta: float) -> void:
 				player_dialogue_triggered = true
 				_emit_player_detected_dialogue()
 	else:
-		# If threat lost or invalid, stop fleeing and resume wandering
 		if target == null or not is_instance_valid(target) or not threats_in_range.has(target):
 			target = null
 			detected_threat = false
 			fleeing_hesitating = false  # reset hesitation
-
-	# Movement and behavior
+	
 	if target:
-		# Flee behavior - run away from threat with hesitation sometimes
 		if fleeing_hesitating:
-			# During hesitation, do not accelerate; just slowly slow down
 			hesitation_time -= delta
 			if hesitation_time <= 0.0:
 				fleeing_hesitating = false  # end hesitation, resume running
-
-			# Continue current velocity without adding acceleration
-			# Slow down velocity gradually by lerping towards zero velocity on horizontal plane
 			var vel_horizontal = Vector3(velocity.x, 0, velocity.z)
 			vel_horizontal = vel_horizontal.lerp(Vector3.ZERO, 2.5 * delta)
 			velocity.x = vel_horizontal.x
 			velocity.z = vel_horizontal.z
-
-			# Gravity as usual
+			
 			if not is_on_floor():
 				velocity.y -= gravity * delta
 			else:
 				velocity.y = 0
-
+	
 			move_and_slide()
-			return  # early return to avoid extra movement logic this frame
-
+			return  
+	
 		else:
-			# Chance to enter hesitation state while fleeing (e.g. 1.5% per frame)
 			if randf() < 0.015:
 				fleeing_hesitating = true
 				hesitation_time = hesitation_duration
 			else:
-				# Normal fleeing run speed
 				SPEED = RUNSPEED
-
-			# Set flee target to run away from threat
+	
 			var flee_dir = (global_position - target.global_position).normalized()
 			var flee_target_pos = global_position + flee_dir * 10.0
 			nav.target_position = flee_target_pos
-
+	
 	else:
-		# Wander normally with hesitation
 		handle_wandering(delta)
-
-	# Rotate toward next nav point
+	
 	var dir = nav.get_next_path_position() - global_position
 	dir.y = 0
 	if dir.length() > 0.01:
 		var rot_angle = atan2(dir.x, dir.z)
 		rotation.y = lerp_angle(rotation.y, rot_angle, 6 * delta)
-
-	# Velocity update
+	
 	var move_dir = dir.normalized()
 	velocity = velocity.lerp(move_dir * SPEED, ACCEL * delta)
-
-	# Gravity
+	
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	else:
@@ -176,11 +175,10 @@ func handle_wandering(delta: float):
 	wander_timer -= delta
 	if wander_state == WanderState.IDLE:
 		SPEED = 0.0
-		rotation.y += delta * 0.2  # slow spin
+		rotation.y += delta * 0.2 
 		if wander_timer <= 0:
 			set_wander_move()
 	elif wander_state == WanderState.MOVING:
-		# Hesitation: small chance to stop briefly while wandering
 		if randf() < 0.01:
 			SPEED = 0.0
 		else:
@@ -198,7 +196,7 @@ func set_wander_move():
 	wander_state = WanderState.MOVING
 	wander_timer = move_duration + randf_range(0.5, 1.0)
 	var random_offset = Vector3(
-		randf_range(-5.0, 5.0),  # smaller wander radius for skittish creature
+		randf_range(-5.0, 5.0),  
 		0,
 		randf_range(-5.0, 5.0)
 	)
@@ -207,6 +205,8 @@ func set_wander_move():
 
 func _emit_player_detected_dialogue():
 	if not player.in_dialogue:
+		aud.stream = spotted
+		aud.play()
 		var valid_lines = player_spotted_dialogue.filter(func(line): return line != "NO DIALOGUE")
 		if valid_lines.size() == 0:
 			return

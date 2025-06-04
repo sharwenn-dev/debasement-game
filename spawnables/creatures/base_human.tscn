@@ -58,7 +58,10 @@ radius = 3.50363
 height = 9.66309
 
 [node name="base_human" type="CharacterBody3D" groups=["Hittable", "Human", "Interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.638046, 0)
 script = ExtResource("1_4ucnw")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.261884, 0)
