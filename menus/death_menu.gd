@@ -8,6 +8,7 @@ var chosen_message = null
 var activated = false
 
 @onready var death_sound = preload("res://assets/sound/sfx/death.wav")
+@onready var death_sound2 = preload("res://assets/sound/sfx/death2.wav")
 
 @export var death_messages = [
 	"You were enough. It was just your time.",
@@ -44,6 +45,8 @@ func activate_death():
 		message_box.text = chosen_message
 		life.show()
 		death.show()
+		aud.stream = death_sound2
+		aud.play()
 		activated = true
 
 func _on_life_pressed() -> void:
